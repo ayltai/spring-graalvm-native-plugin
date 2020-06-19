@@ -1,7 +1,7 @@
 # Spring GraalVM native Gradle plugin
 
-[![GitHub workflow status](https://img.shields.io/github/workflow/status/ayltai/spring-graalvm-native-plugin/push?style=flat)](https://github.com/ayltai/spring-graalvm-native-plugin/actions)
-[![Codacy grade](https://img.shields.io/codacy/grade/2c5a8d9d71ca4da794494c08bffdd73a.svg?style=flat)](https://app.codacy.com/app/AlanTai/spring-graalvm-native-plugin/dashboard)
+[![GitHub workflow status](https://img.shields.io/github/workflow/status/ayltai/spring-graalvm-native-plugin/Push?style=flat)](https://github.com/ayltai/spring-graalvm-native-plugin/actions)
+[![Codacy grade](https://img.shields.io/codacy/grade/271a4011f13d4200842d3334c21e8b2f.svg?style=flat)](https://app.codacy.com/app/AlanTai/spring-graalvm-native-plugin/dashboard)
 [![Sonar quality gate](https://img.shields.io/sonar/quality_gate/ayltai_spring-graalvm-native-plugin?style=flat&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=ayltai_spring-graalvm-native-plugin)
 [![Sonar violations (short format)](https://img.shields.io/sonar/violations/ayltai_spring-graalvm-native-plugin?style=flat&format=short&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=ayltai_spring-graalvm-native-plugin)
 [![Sonar Test Success Rate](https://img.shields.io/sonar/test_success_density/ayltai_spring-graalvm-native-plugin?style=flat&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=ayltai_spring-graalvm-native-plugin)
