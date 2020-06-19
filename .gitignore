@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# JetBrains
+.idea/
+*.iml
+
+# Java
+*.class
+hs_err_pid*
+
+# Gradle
+.gradle
+build/
+!gradle-wrapper.jar
+
+# Generated
+*.log

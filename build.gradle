@@ -1,0 +1,125 @@
+plugins {
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish'     version '0.12.0'
+    id 'checkstyle'
+    id 'com.github.spotbugs'           version '4.4.1'
+    id 'org.sonarqube'                 version '3.0'
+    id 'jacoco'
+    id 'com.github.ben-manes.versions' version '0.28.0'
+}
+
+group   'com.github.ayltai'
+version '1.0.0'
+
+sourceCompatibility = 8
+targetCompatibility = 8
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url 'https://dl.bintray.com/mockito/maven' }
+}
+
+ext {
+    lombokVersion = '1.18.12'
+    junitVersion  = '5.6.2'
+}
+
+dependencies {
+    testImplementation 'org.mockito:mockito-core:3.3.12'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly    "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//region Checkstyle configurations
+
+checkstyle {
+    toolVersion    = '8.33'
+    configFile     = rootProject.file('./checkstyle.xml')
+    ignoreFailures = true
+    showViolations = true
+}
+
+tasks.withType(Checkstyle) {
+    source = 'src/main/java'
+
+    include '**/*.java'
+    exclude '**/*Test.java'
+
+    reports {
+        xml.enabled      = Boolean.valueOf(System.getenv('CI'))
+        html.enabled     = !Boolean.valueOf(System.getenv('CI'))
+        xml.destination  = file("$project.buildDir/reports/checkstyle/checkstyle-output.xml")
+        html.destination = file("$project.buildDir/reports/checkstyle/checkstyle-output.html")
+    }
+}
+
+//endregion
+
+//region SpotBugs configurations
+
+spotbugs {
+    toolVersion.set('4.0.3')
+    ignoreFailures.set(true)
+    excludeFilter.set(file('./spotbugs-exclude.xml'))
+
+    effort      = 'max'
+    reportLevel = 'medium'
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+    reports {
+        xml.enabled  = Boolean.valueOf(System.getenv('CI'))
+        html.enabled = !Boolean.valueOf(System.getenv('CI'))
+    }
+}
+
+//endregion
+
+//region JaCoCo configurations
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    dependsOn 'test'
+
+    reports {
+        xml.enabled  = true
+        html.enabled = true
+    }
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes                 = [ 'jdk.internal.*', ]
+}
+
+//endregion
+
+//region Gradle plugin publication configuration
+
+pluginBundle {
+    website = 'https://github.com/ayltai/spring-graalvm-native-plugin'
+    vcsUrl  = 'https://github.com/ayltai/spring-graalvm-native-plugin.git'
+    tags    = [ 'graal', 'graalvm', 'native', 'image', 'spring', 'boot', 'java', ]
+}
+
+gradlePlugin {
+    plugins {
+        nativeImage {
+            id                  = 'com.github.ayltai.spring-graalvm-native-plugin'
+            displayName         = 'Spring GraalVM native Gradle plugin'
+            description         = 'Support for building Spring Boot applications as GraalVM native images'
+            implementationClass = 'com.github.ayltai.gradle.plugin.SpringGraalNativePlugin'
+        }
+    }
+}
+
+//endregion
