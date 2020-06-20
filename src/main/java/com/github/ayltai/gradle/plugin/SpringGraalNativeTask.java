@@ -115,12 +115,17 @@ public class SpringGraalNativeTask extends Exec {
 
     protected void deleteOutputDir(@Nonnull final File outputDir) throws IOException {
         if (outputDir.exists()) {
-            Files.walk(outputDir.toPath())
-                .map(Path::toFile)
-                .sorted(Comparator.reverseOrder())
-                .forEach(file -> {
-                    if (!file.delete()) throw new ResourceException("Failed to delete directory or file at " + file.getAbsolutePath());
-                });
+            try (Stream<Path> stream = Files.walk(outputDir.toPath())) {
+                stream.map(Path::toFile)
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(file -> {
+                        try {
+                            Files.deleteIfExists(file.toPath());
+                        } catch (final IOException e) {
+                            throw new ResourceException("Failed to delete directory or file: " + file.getAbsolutePath(), e);
+                        }
+                    });
+            }
         }
     }
 
@@ -201,8 +206,6 @@ public class SpringGraalNativeTask extends Exec {
         args.add("-cp");
         args.add(classPath);
         args.add(this.mainClassName.get());
-
-        System.out.println("Executing command:\n" + String.join(" ", args));
 
         return args;
     }
