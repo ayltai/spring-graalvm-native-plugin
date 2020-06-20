@@ -103,6 +103,15 @@ tasks.withType(Test) {
 
 //endregion
 
+sonarqube {
+    properties {
+        property 'sonar.host.url',     'https://sonarcloud.io'
+        property 'sonar.organization', 'ayltai'
+        property 'sonar.projectKey',   'ayltai_spring-graalvm-native-plugin'
+        property 'sonar.login',        System.getenv('SONAR_TOKEN')
+    }
+}
+
 //region Gradle plugin publication configuration
 
 pluginBundle {
