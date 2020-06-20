@@ -10,7 +10,7 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.0.1'
+version '1.0.2'
 
 sourceCompatibility = 8
 targetCompatibility = 8

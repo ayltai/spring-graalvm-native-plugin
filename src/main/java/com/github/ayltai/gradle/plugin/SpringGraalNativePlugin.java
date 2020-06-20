@@ -23,7 +23,7 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
             .maven(repo -> repo.setUrl(SpringGraalNativePlugin.DEPENDENT_REPO));
 
         project.getConfigurations()
-            .maybeCreate("compileOnly")
+            .maybeCreate("implementation")
             .getDependencies()
             .add(project.getDependencies()
                 .create(SpringGraalNativePlugin.DEPENDENT_ARTIFACT));

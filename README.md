@@ -91,9 +91,6 @@ nativeImage {
     reportExceptionStackTraces = true
     removeUnusedAutoConfig     = true
     removeYamlSupport          = true
-    removeXmlSupport           = true
-    removeSpelSupport          = true
-    removeJmxSupport           = true
 }
 ```
 
