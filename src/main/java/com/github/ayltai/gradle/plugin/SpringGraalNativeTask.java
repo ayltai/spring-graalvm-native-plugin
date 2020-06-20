@@ -182,6 +182,11 @@ public class SpringGraalNativeTask extends Exec {
     protected Iterable<String> getCommandLineArgs(@Nonnull final String classPath) {
         final List<String> args = new ArrayList<>();
         args.add("native-image");
+        args.add("--allow-incomplete-classpath");
+        args.add("--report-unsupported-elements-at-runtime");
+        args.add("--no-fallback");
+        args.add("--no-server");
+        args.add("--install-exit-handlers");
 
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+TraceClassInitialization", this.traceClassInitialization);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+RemoveSaturatedTypeFlows", this.removeSaturatedTypeFlows);

@@ -82,10 +82,14 @@ buildscript {
 ```
 
 ### Specify build arguments
-This plugin uses the following Gradle extension for configuration:
+This plugin uses the following example Gradle extension for configuration:
 ```groovy
 nativeImage {
     mainClassName = 'com.example.springboot.Application'
+
+    traceClassInitialization   = true
+    reportExceptionStackTraces = true
+    removeUnusedAutoConfig     = true
 }
 ```
 
