@@ -37,7 +37,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.0'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.1'
 }
 ```
 
@@ -51,7 +51,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.0'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.1'
     }
 }
 
@@ -62,7 +62,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.0.0'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.0.1'
 }
 ```
 
@@ -76,7 +76,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.0')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.1')
     }
 }
 ```
@@ -90,6 +90,10 @@ nativeImage {
     traceClassInitialization   = true
     reportExceptionStackTraces = true
     removeUnusedAutoConfig     = true
+    removeYamlSupport          = true
+    removeXmlSupport           = true
+    removeSpelSupport          = true
+    removeJmxSupport           = true
 }
 ```
 
