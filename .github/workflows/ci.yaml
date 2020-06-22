@@ -12,6 +12,11 @@ jobs:
           java-version: 8
       - name: Run Checkstyle linter
         run: ./gradlew checkstyleMain
+      - name: Upload Checkstyle report
+        uses: actions/upload-artifact@v2
+        with:
+          name: checkstyle
+          path: build/reports/checkstyle/
   spotbugs:
     runs-on: ubuntu-20.04
     steps:
@@ -23,6 +28,11 @@ jobs:
           java-version: 8
       - name: Run SpotBugs linter
         run: ./gradlew spotbugsMain
+      - name: Upload SpotBugs report
+        uses: actions/upload-artifact@v2
+        with:
+          name: spotbugs
+          path: build/reports/sportbugs/
   test:
     runs-on: ubuntu-20.04
     steps:
@@ -36,8 +46,18 @@ jobs:
         run: ./gradlew validatePlugins
       - name: Run tests
         run: ./gradlew test
+      - name: Upload tests report
+        uses: actions/upload-artifact@v2
+        with:
+          name: test
+          path: build/reports/tests/test/
       - name: Generate coverage report
         run: ./gradlew jacocoTestReport
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: build/reports/jacoco/test/html/
       - name: Run SonarQube scanner
         run: ./gradlew sonarqube
         env:

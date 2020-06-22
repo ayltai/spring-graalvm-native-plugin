@@ -51,8 +51,8 @@ tasks.withType(Checkstyle) {
     exclude '**/*Test.java'
 
     reports {
-        xml.enabled      = Boolean.valueOf(System.getenv('CI'))
-        html.enabled     = !Boolean.valueOf(System.getenv('CI'))
+        xml.enabled      = false
+        html.enabled     = true
         xml.destination  = file("$project.buildDir/reports/checkstyle/checkstyle-output.xml")
         html.destination = file("$project.buildDir/reports/checkstyle/checkstyle-output.html")
     }
@@ -73,8 +73,8 @@ spotbugs {
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
-        xml.enabled  = Boolean.valueOf(System.getenv('CI'))
-        html.enabled = !Boolean.valueOf(System.getenv('CI'))
+        xml.enabled  = false
+        html.enabled = true
     }
 }
 
