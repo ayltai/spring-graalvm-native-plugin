@@ -20,14 +20,18 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 import org.gradle.api.InvalidUserDataException;
+import org.gradle.api.logging.Logger;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.resources.ResourceException;
 import org.gradle.api.tasks.Exec;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
+import org.slf4j.LoggerFactory;
 
 public class SpringGraalNativeTask extends Exec {
+    private static final Logger LOGGER = (Logger)LoggerFactory.getLogger(SpringGraalNativeTask.class);
+
     //region Constants
 
     protected static final String DIR_OUTPUT = "native";
@@ -91,85 +95,6 @@ public class SpringGraalNativeTask extends Exec {
         this.setDescription("Support for building Spring Boot applications as GraalVM native images");
     }
 
-    @TaskAction
-    @Override
-    protected void exec() {
-        if (!this.mainClassName.isPresent()) throw new InvalidUserDataException("mainClassName is null");
-
-        final File outputDir = new File(this.getProject().getBuildDir().getAbsolutePath(), SpringGraalNativeTask.DIR_OUTPUT);
-
-        try {
-            final Path classesPath = Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_BOOT_INF, "classes");
-
-            this.deleteOutputDir(outputDir);
-            this.copyFiles(classesPath, outputDir);
-
-            this.setWorkingDir(outputDir);
-            this.setCommandLine(this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir)));
-
-            super.exec();
-        } catch (final IOException e) {
-            throw new ResourceException(e.getMessage(), e);
-        }
-    }
-
-    protected void deleteOutputDir(@Nonnull final File outputDir) throws IOException {
-        if (outputDir.exists()) {
-            try (Stream<Path> stream = Files.walk(outputDir.toPath())) {
-                stream.map(Path::toFile)
-                    .sorted(Comparator.reverseOrder())
-                    .forEach(file -> {
-                        try {
-                            Files.deleteIfExists(file.toPath());
-                        } catch (final IOException e) {
-                            throw new ResourceException("Failed to delete directory or file: " + file.getAbsolutePath(), e);
-                        }
-                    });
-            }
-        }
-    }
-
-    protected void copyFiles(@Nonnull final Path classesPath, @Nonnull final File outputDir) {
-        try {
-            this.explodeJar(((Jar)SpringGraalNativePlugin.getDependency(this.getProject())).getArchiveFile().get().getAsFile(), outputDir);
-
-            Files.copy(Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST), Paths.get(classesPath.toString(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST));
-        } catch (final IOException e) {
-            throw new ResourceException(e.getMessage(), e);
-        }
-    }
-
-    protected void explodeJar(@Nonnull final File archive, @Nonnull final File outputDir) throws IOException {
-        try (JarFile jarFile = new JarFile(archive)) {
-            jarFile.stream()
-                .sorted((entry1, entry2) -> (entry1.isDirectory() ? -1 : 0) + (entry2.isDirectory() ? 1 : 0))
-                .forEachOrdered(entry -> {
-                    try {
-                        this.explodeJarEntry(outputDir, jarFile, entry);
-                    } catch (final IOException e) {
-                        throw new ResourceException("Failed to decompress JAR entry: " + entry.getName(), e);
-                    }
-                });
-        }
-    }
-
-    protected void explodeJarEntry(@Nonnull final File outputDir, @Nonnull final JarFile jarFile, @Nonnull final JarEntry entry) throws IOException {
-        final File file = new File(outputDir, entry.getName());
-
-        if (entry.isDirectory()) {
-            if (!file.mkdirs()) throw new IOException("Failed to create folder(s): " + file.getAbsolutePath());
-        } else {
-            final byte[] buffer = new byte[SpringGraalNativeTask.BUFFER_SIZE];
-
-            try (InputStream inputStream = new BufferedInputStream(jarFile.getInputStream(entry))) {
-                try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-                    int length;
-                    while ((length = inputStream.read(buffer)) >= 0) outputStream.write(buffer, 0, length);
-                }
-            }
-        }
-    }
-
     @Nonnull
     protected String getClassPath(@Nonnull final String classesPath, @Nonnull final File outputDir) {
         final File[] files = Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_BOOT_INF, "lib").toFile().listFiles();
@@ -212,10 +137,98 @@ public class SpringGraalNativeTask extends Exec {
         args.add(classPath);
         args.add(this.mainClassName.get());
 
+        SpringGraalNativeTask.LOGGER.debug(String.join(" ", args));
+
         return args;
     }
 
     protected static void appendCommandLineArg(@Nonnull final List<String> args, @Nonnull final String arg, @Nonnull final Property<Boolean> property) {
         if (Boolean.TRUE.equals(property.getOrNull())) args.add(arg);
+    }
+
+    @TaskAction
+    @Override
+    protected void exec() {
+        if (!this.mainClassName.isPresent()) throw new InvalidUserDataException("mainClassName is null");
+
+        final File outputDir = new File(this.getProject().getBuildDir().getAbsolutePath(), SpringGraalNativeTask.DIR_OUTPUT);
+
+        try {
+            final Path classesPath = Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_BOOT_INF, "classes");
+
+            this.deleteOutputDir(outputDir);
+            this.copyFiles(classesPath, outputDir);
+
+            this.setWorkingDir(outputDir);
+            this.setCommandLine(this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir)));
+
+            super.exec();
+        } catch (final IOException e) {
+            throw new ResourceException(e.getMessage(), e);
+        }
+    }
+
+    protected void deleteOutputDir(@Nonnull final File outputDir) throws IOException {
+        if (outputDir.exists()) {
+            SpringGraalNativeTask.LOGGER.info("Clear output directory");
+
+            try (Stream<Path> stream = Files.walk(outputDir.toPath())) {
+                stream.map(Path::toFile)
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(file -> {
+                        try {
+                            Files.deleteIfExists(file.toPath());
+                        } catch (final IOException e) {
+                            throw new ResourceException("Failed to delete directory or file: " + file.getAbsolutePath(), e);
+                        }
+                    });
+            }
+        } else {
+            SpringGraalNativeTask.LOGGER.info("Skip clearing output directory as it does not exist");
+        }
+    }
+
+    protected void copyFiles(@Nonnull final Path classesPath, @Nonnull final File outputDir) {
+        try {
+            this.explodeJar(((Jar)SpringGraalNativePlugin.getDependency(this.getProject())).getArchiveFile().get().getAsFile(), outputDir);
+
+            SpringGraalNativeTask.LOGGER.info("Copy dependencies to output directory");
+            Files.copy(Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST), Paths.get(classesPath.toString(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST));
+        } catch (final IOException e) {
+            throw new ResourceException(e.getMessage(), e);
+        }
+    }
+
+    protected void explodeJar(@Nonnull final File archive, @Nonnull final File outputDir) throws IOException {
+        SpringGraalNativeTask.LOGGER.info("Decompress dependencies");
+
+        try (JarFile jarFile = new JarFile(archive)) {
+            jarFile.stream()
+                .sorted((entry1, entry2) -> (entry1.isDirectory() ? -1 : 0) + (entry2.isDirectory() ? 1 : 0))
+                .forEachOrdered(entry -> {
+                    try {
+                        this.explodeJarEntry(outputDir, jarFile, entry);
+                    } catch (final IOException e) {
+                        throw new ResourceException("Failed to decompress JAR entry: " + entry.getName(), e);
+                    }
+                });
+        }
+    }
+
+    protected void explodeJarEntry(@Nonnull final File outputDir, @Nonnull final JarFile jarFile, @Nonnull final JarEntry entry) throws IOException {
+        final File file = new File(outputDir, entry.getName());
+
+        if (entry.isDirectory()) {
+            if (!file.mkdirs()) throw new IOException("Failed to create folder(s): " + file.getAbsolutePath());
+        } else {
+            final byte[] buffer = new byte[SpringGraalNativeTask.BUFFER_SIZE];
+
+            try (
+                InputStream inputStream   = new BufferedInputStream(jarFile.getInputStream(entry));
+                OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+                int length;
+                while ((length = inputStream.read(buffer)) >= 0) outputStream.write(buffer, 0, length);
+            }
+        }
     }
 }
