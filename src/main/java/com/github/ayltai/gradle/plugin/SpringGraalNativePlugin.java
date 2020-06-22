@@ -28,11 +28,13 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
             .add(project.getDependencies()
                 .create(SpringGraalNativePlugin.DEPENDENT_ARTIFACT));
 
-        final SpringGraalNativeExtension extension = project.getExtensions().create("nativeImage", SpringGraalNativeExtension.class, project);
+        final SpringGraalNativeExtension extension = project.getExtensions().create("nativeImage", SpringGraalNativeExtension.class, project.getObjects());
 
         project.getTasks()
             .register(SpringGraalNativePlugin.CURRENT_TASK, SpringGraalNativeTask.class)
             .configure(task -> {
+                task.dependsOn(SpringGraalNativePlugin.getDependency(project));
+
                 task.traceClassInitialization.set(extension.getTraceClassInitialization());
                 task.removeSaturatedTypeFlows.set(extension.getRemoveSaturatedTypeFlows());
                 task.reportExceptionStackTraces.set(extension.getReportExceptionStackTraces());
@@ -53,8 +55,6 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
                 task.mainClassName.set(extension.getMainClassName());
                 task.maxHeapSize.set(extension.getMaxHeapSize());
                 task.initializeAtBuildTime.set(extension.getInitializeAtBuildTime());
-
-                task.dependsOn(SpringGraalNativePlugin.getDependency(project));
             });
     }
 

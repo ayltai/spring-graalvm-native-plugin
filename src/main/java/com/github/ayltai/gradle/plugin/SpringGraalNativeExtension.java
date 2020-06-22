@@ -3,8 +3,9 @@ package com.github.ayltai.gradle.plugin;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
-import org.gradle.api.Project;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 
@@ -36,27 +37,28 @@ public class SpringGraalNativeExtension {
 
     //endregion
 
-    public SpringGraalNativeExtension(@Nonnull final Project project) {
-        this.traceClassInitialization   = project.getObjects().property(Boolean.class);
-        this.removeSaturatedTypeFlows   = project.getObjects().property(Boolean.class);
-        this.reportExceptionStackTraces = project.getObjects().property(Boolean.class);
-        this.printAnalysisCallTree      = project.getObjects().property(Boolean.class);
-        this.enabledAllSecurityServices = project.getObjects().property(Boolean.class);
-        this.staticallyLinked           = project.getObjects().property(Boolean.class);
-        this.verbose                    = project.getObjects().property(Boolean.class);
-        this.warnMissingSelectorHints   = project.getObjects().property(Boolean.class);
-        this.removeUnusedAutoConfig     = project.getObjects().property(Boolean.class);
-        this.removeYamlSupport          = project.getObjects().property(Boolean.class);
-        this.removeXmlSupport           = project.getObjects().property(Boolean.class);
-        this.removeSpelSupport          = project.getObjects().property(Boolean.class);
-        this.removeJmxSupport           = project.getObjects().property(Boolean.class);
-        this.verify                     = project.getObjects().property(Boolean.class);
-        this.springNativeVerbose        = project.getObjects().property(Boolean.class);
-        this.springNativeMode           = project.getObjects().property(String.class);
-        this.dumpConfig                 = project.getObjects().property(String.class);
-        this.mainClassName              = project.getObjects().property(String.class);
-        this.maxHeapSize                = project.getObjects().property(String.class);
-        this.initializeAtBuildTime      = project.getObjects().listProperty(String.class);
+    @Inject
+    public SpringGraalNativeExtension(@Nonnull final ObjectFactory factory) {
+        this.traceClassInitialization   = factory.property(Boolean.class);
+        this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
+        this.reportExceptionStackTraces = factory.property(Boolean.class);
+        this.printAnalysisCallTree      = factory.property(Boolean.class);
+        this.enabledAllSecurityServices = factory.property(Boolean.class);
+        this.staticallyLinked           = factory.property(Boolean.class);
+        this.verbose                    = factory.property(Boolean.class);
+        this.warnMissingSelectorHints   = factory.property(Boolean.class);
+        this.removeUnusedAutoConfig     = factory.property(Boolean.class);
+        this.removeYamlSupport          = factory.property(Boolean.class);
+        this.removeXmlSupport           = factory.property(Boolean.class);
+        this.removeSpelSupport          = factory.property(Boolean.class);
+        this.removeJmxSupport           = factory.property(Boolean.class);
+        this.verify                     = factory.property(Boolean.class);
+        this.springNativeVerbose        = factory.property(Boolean.class);
+        this.springNativeMode           = factory.property(String.class);
+        this.dumpConfig                 = factory.property(String.class);
+        this.mainClassName              = factory.property(String.class);
+        this.maxHeapSize                = factory.property(String.class);
+        this.initializeAtBuildTime      = factory.listProperty(String.class);
     }
 
     //region Properties
