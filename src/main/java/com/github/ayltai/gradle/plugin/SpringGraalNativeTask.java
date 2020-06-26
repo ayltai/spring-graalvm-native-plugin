@@ -27,6 +27,7 @@ import org.gradle.api.resources.ResourceException;
 import org.gradle.api.tasks.Exec;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
+
 import org.slf4j.LoggerFactory;
 
 public class SpringGraalNativeTask extends Exec {
@@ -193,6 +194,10 @@ public class SpringGraalNativeTask extends Exec {
             this.explodeJar(((Jar)SpringGraalNativePlugin.getDependency(this.getProject())).getArchiveFile().get().getAsFile(), outputDir);
 
             SpringGraalNativeTask.LOGGER.info("Copy dependencies to output directory");
+
+            final File destination = new File(classesPath.toString(), SpringGraalNativeTask.DIR_META_INF);
+            if (!destination.exists() && !destination.mkdirs()) throw new ResourceException("Failed to create directory: " + destination.getAbsolutePath());
+
             Files.copy(Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST), Paths.get(classesPath.toString(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST));
         } catch (final IOException e) {
             throw new ResourceException(e.getMessage(), e);
