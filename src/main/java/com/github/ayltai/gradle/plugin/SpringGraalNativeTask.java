@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 import org.gradle.api.InvalidUserDataException;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
@@ -138,7 +139,7 @@ public class SpringGraalNativeTask extends Exec {
         args.add(classPath);
         args.add(this.mainClassName.get());
 
-        SpringGraalNativeTask.LOGGER.debug(String.join(" ", args));
+        if (SpringGraalNativeTask.LOGGER.isEnabled(LogLevel.DEBUG)) SpringGraalNativeTask.LOGGER.debug(String.join(" ", args));
 
         return args;
     }
