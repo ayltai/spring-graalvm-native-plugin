@@ -131,6 +131,7 @@ public class SpringGraalNativeTask extends Exec {
         if (this.removeJmxSupport.isPresent()) args.add("-Dspring.native.remove-jmx-support=" + this.removeJmxSupport.get());
         if (this.verify.isPresent()) args.add("-Dspring.native.verify=" + this.verify.get());
         if (this.springNativeVerbose.isPresent()) args.add("-Dspring.native.verbose=" + this.springNativeVerbose.get());
+        if (this.springNativeMode.isPresent()) args.add("-Dspring.native.mode=" + this.springNativeMode.get());
         if (this.maxHeapSize.isPresent() && !this.maxHeapSize.get().isEmpty()) args.add("-J-Xmx" + this.maxHeapSize.get());
         if (this.initializeAtBuildTime.isPresent() && !this.initializeAtBuildTime.get().isEmpty()) args.add("--initialize-at-build-time=" + String.join(",", this.initializeAtBuildTime.get()));
 
