@@ -1,2 +1,3 @@
 rootProject.name = 'spring-graalvm-native-plugin'
-
+include 'samples:springmvc-tomcat'
+findProject(':samples:springmvc-tomcat')?.name = 'springmvc-tomcat'

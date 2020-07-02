@@ -37,7 +37,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.2'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.4'
 }
 ```
 
@@ -51,7 +51,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.2'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.4'
     }
 }
 
@@ -62,7 +62,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.0.2'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.0.4'
 }
 ```
 
@@ -76,7 +76,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.2')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.4')
     }
 }
 ```
@@ -101,11 +101,19 @@ More configuration options can be found [here](https://github.com/ayltai/spring-
 You need to specify `proxyBeanMethods = false` for your `@SpringBootApplication` annotation:
 ```java
 @SpringBootApplication(proxyBeanMethods = false)
+public class TomcatApplication {
+    public static void main(final String[] args) {
+        SpringApplication.run(TomcatApplication.class, args);
+    }
+}
 ```
 
 ### Build GraalVM Native Image
 1. Run the Gradle task `buildNativeImage`
 2. The native image can be located at `<buildDir>/native`
+
+## Sample project
+[samples](https://github.com/ayltai/spring-graalvm-native-plugin/tree/master/samples) contains various samples that demonstrate the basic usage of this Gradle plugin.
 
 ## Configuration
 | Property | Type | Description |

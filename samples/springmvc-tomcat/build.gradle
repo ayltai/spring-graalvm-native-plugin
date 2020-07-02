@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'                       version '2.3.0.RELEASE'
+    id 'io.spring.dependency-management'                version '1.0.9.RELEASE'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.4'
+}
+
+group   'com.example'
+version '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 8
+targetCompatibility = 8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation ('org.springframework.boot:spring-boot-starter-web') {
+        exclude group : 'org.apache.tomcat.embed', module : 'tomcat-embed-websocket'
+    }
+}
+
+nativeImage {
+    mainClassName              = 'com.example.tomcat.TomcatApplication'
+    traceClassInitialization   = true
+    reportExceptionStackTraces = true
+    removeUnusedAutoConfig     = true
+    removeYamlSupport          = true
+    removeSpelSupport          = true
+    removeJmxSupport           = true
+    maxHeapSize                = '4G'
+}
