@@ -141,6 +141,9 @@ public class TomcatApplication {
 
 See [Spring GraalVM Native configuration options](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.7.1/spring-graalvm-native-docs-0.7.1.zip!/reference/index.html#options) for more details.
 
+## GitHub action
+[setup-graalvm](https://github.com/marketplace/actions/setup-graalvm-action) is a GitHub action that sets up a GraalVM environment for your [GitHub workflow](https://github.com/features/actions).
+
 ## License
 [MIT](https://github.com/ayltai/spring-graalvm-native-plugin/blob/master/LICENSE)
 
