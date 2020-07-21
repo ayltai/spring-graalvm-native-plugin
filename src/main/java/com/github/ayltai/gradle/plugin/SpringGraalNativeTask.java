@@ -101,9 +101,9 @@ public class SpringGraalNativeTask extends Exec {
     @Nonnull
     protected String getClassPath(@Nonnull final String classesPath, @Nonnull final File outputDir) {
         final File[] files = Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_BOOT_INF, "lib").toFile().listFiles();
-        return files == null ? classesPath : classesPath + ":" + Stream.of(files)
+        return files == null ? classesPath : classesPath + (OperatingSystem.current().isWindows() ? ";" : ":") + Stream.of(files)
             .map(File::getAbsolutePath)
-            .collect(Collectors.joining(":"));
+            .collect(Collectors.joining(OperatingSystem.current().isWindows() ? ";" : ":"));
     }
 
     @Nonnull

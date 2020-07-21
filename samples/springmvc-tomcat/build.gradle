@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot'                       version '2.3.1.RELEASE'
     id 'io.spring.dependency-management'                version '1.0.9.RELEASE'
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.5'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.7'
 }
 
 group   'com.example'
