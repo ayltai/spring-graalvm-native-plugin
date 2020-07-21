@@ -28,6 +28,7 @@ import org.gradle.api.resources.ResourceException;
 import org.gradle.api.tasks.Exec;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
+import org.gradle.internal.os.OperatingSystem;
 
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +109,7 @@ public class SpringGraalNativeTask extends Exec {
     @Nonnull
     protected Iterable<String> getCommandLineArgs(@Nonnull final String classPath) {
         final List<String> args = new ArrayList<>();
-        args.add("native-image");
+        args.add(OperatingSystem.current().isWindows() ? "native-image.cmd" : "native-image");
         args.add("--allow-incomplete-classpath");
         args.add("--report-unsupported-elements-at-runtime");
         args.add("--no-fallback");
@@ -162,8 +163,8 @@ public class SpringGraalNativeTask extends Exec {
             this.deleteOutputDir(outputDir);
             this.copyFiles(classesPath, outputDir);
 
-            this.setWorkingDir(outputDir);
-            this.setCommandLine(this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir)));
+            this.workingDir(outputDir)
+                .commandLine(this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir)));
 
             super.exec();
         } catch (final IOException e) {
