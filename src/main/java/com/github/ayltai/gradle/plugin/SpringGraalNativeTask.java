@@ -21,6 +21,7 @@ import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.resources.ResourceException;
 import org.gradle.api.tasks.Exec;
+import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.internal.os.OperatingSystem;
@@ -105,12 +106,14 @@ public class SpringGraalNativeTask extends Exec {
     }
 
     @Nonnull
+    @Internal
     protected String getDownloadUrl() {
         final String platform = PlatformUtils.getPlatform();
         return String.format(SpringGraalNativeTask.DOWNLOAD_URL, this.toolVersion.getOrElse(Constants.DEFAULT_TOOL_VERSION), this.javaVersion.getOrElse(Constants.DEFAULT_JAVA_VERSION), platform, PlatformUtils.getArchitecture(), "windows".equals(platform) ? "zip" : "tar.gz");
     }
 
     @Nonnull
+    @Internal
     protected File getToolsDir() {
         return Paths.get(this.getProject().getBuildDir().getAbsolutePath(), "tmp", SpringGraalNativePlugin.TASK_NAME, DownloadUtils.getOutputPath(this.toolVersion.getOrElse(Constants.DEFAULT_TOOL_VERSION), this.javaVersion.getOrElse(Constants.DEFAULT_JAVA_VERSION))).toFile();
     }
