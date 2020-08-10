@@ -23,21 +23,13 @@ Supports for building Spring Boot applications as GraalVM native images.
 
 ## Quick start
 
-### Install GraalVM and GraalVM Native Image
-1. Install the latest version of [GraalVM](https://www.graalvm.org/getting-started/#install-graalvm)
-2. Set `JAVA_HOME` and `PATH` appropriately for GraalVM
-3. Install GraalVM Native Image:
-   ```shell script
-   gu install native-image
-   ```
-
 ### Apply Gradle plugin
 
 #### Groovy
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.7'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.1.0'
 }
 ```
 
@@ -51,7 +43,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.7'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.1.0'
     }
 }
 
@@ -62,7 +54,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.0.7'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.1.0'
 }
 ```
 
@@ -76,7 +68,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.0.7')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.1.0')
     }
 }
 ```
@@ -118,6 +110,9 @@ public class TomcatApplication {
 ## Configuration
 | Property | Type | Description |
 |----------|------|-------------|
+| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `20.1.0`. |
+| `javaVersion` | `String` | The JDK version to be downloaded with GraalVM Community Edition. Default to `8`. |
+| `download` | `String` | Specify when to download GraalVM Community Edition. Supports `default` which downloads GraalVM tools only if they are not already downloaded, `always` which always (re-)download GraalVM tools, and `skip` which skips downloading GraalVM tools and assumes they are already installed. |
 | `mainClassName` (Required) | `String` | The fully qualified name of the Java class that contains a `main` method for the entry point of the Native Image executable. |
 | `traceClassInitialization` | `boolean` | Provides useful information to debug class initialization issues. |
 | `removeSaturatedTypeFlows` | `boolean` | Reduces build time and decrease build memory consumption, especially for big projects. |

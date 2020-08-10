@@ -14,6 +14,9 @@ public class SpringGraalNativeExtension {
 
     //region Gradle plugin properties
 
+    protected final Property<String>     toolVersion;
+    protected final Property<String>     javaVersion;
+    protected final Property<String>     download;
     protected final Property<Boolean>    traceClassInitialization;
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
@@ -39,6 +42,9 @@ public class SpringGraalNativeExtension {
 
     @Inject
     public SpringGraalNativeExtension(@Nonnull final ObjectFactory factory) {
+        this.toolVersion                = factory.property(String.class);
+        this.javaVersion                = factory.property(String.class);
+        this.download                   = factory.property(String.class);
         this.traceClassInitialization   = factory.property(Boolean.class);
         this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
         this.reportExceptionStackTraces = factory.property(Boolean.class);
@@ -62,6 +68,54 @@ public class SpringGraalNativeExtension {
     }
 
     //region Properties
+
+    /**
+     * Returns the version of GraalVM Community Edition to download. Default is {@code 20.1.0}.
+     * @return The version of GraalVM Community Edition to download.
+     */
+    public String getToolVersion() {
+        return this.toolVersion.getOrElse(Constants.DEFAULT_TOOL_VERSION);
+    }
+
+    /**
+     * Sets the version of GraalVM Community Edition to download.
+     * @param toolVersion The version of GraalVM Community Edition to download.
+     */
+    public void setToolVersion(@Nonnull final String toolVersion) {
+        this.toolVersion.set(toolVersion);
+    }
+
+    /**
+     * Returns the version of JDK to be downloaded with GraalVM Community Edition. Default is {@code 8}.
+     * @return The version of JDK to be downloaded with GraalVM Community Edition.
+     */
+    public String getJavaVersion() {
+        return this.javaVersion.getOrElse(Constants.DEFAULT_JAVA_VERSION);
+    }
+
+    /**
+     * Sets the version of JDK to be downloaded with GraalVM Community Edition.
+     * @param javaVersion The version of JDK to be downloaded with GraalVM Community Edition.
+     */
+    public void setJavaVersion(@Nonnull final String javaVersion) {
+        this.javaVersion.set(javaVersion);
+    }
+
+    /**
+     * Returns when to download GraalVM Community Edition. Supports `default` (to download and cache a standalone version of GraalVM tools), `always` (to always download and overwrite any existing standalone version of GraalVM tools), and `skip` (not to download GraalVM tools assuming that GraalVM is already installed on the system).
+     * @return A string that represents when to download GraalVM Community Edition.
+     */
+    public String getDownload() {
+        return this.download.getOrElse(Constants.DOWNLOAD_DEFAULT);
+    }
+
+    /**
+     * Specifies when to download GraalVM Community Edition. Supports `default` (to download and cache a standalone version of GraalVM tools), `always` (to always download and overwrite any existing standalone version of GraalVM tools), and `skip` (not to download GraalVM tools assuming that GraalVM is already installed on the system).
+     * @param download A string that represents when to download GraalVM Community Edition.
+     */
+    public void setDownload(@Nonnull final String download) {
+        this.download.set(download);
+    }
 
     /**
      * Returns {@code true} if useful information to debug class initialization issues is provided.

@@ -9,11 +9,11 @@ import org.gradle.api.Task;
 public class SpringGraalNativePlugin implements Plugin<Project> {
     //region Constants
 
-    static final String CURRENT_TASK   = "buildNativeImage";
+    static final String TASK_NAME      = "buildNativeImage";
     static final String DEPENDENT_TASK = "bootJar";
 
     private static final String DEPENDENT_REPO     = "https://repo.spring.io/milestone";
-    private static final String DEPENDENT_ARTIFACT = "org.springframework.experimental:spring-graalvm-native:0.7.1";
+    private static final String DEPENDENT_ARTIFACT = "org.springframework.experimental:spring-graalvm-native:" + Constants.SPRING_GRAALVM_VERSION;
 
     //endregion
 
@@ -31,10 +31,13 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
         final SpringGraalNativeExtension extension = project.getExtensions().create("nativeImage", SpringGraalNativeExtension.class, project.getObjects());
 
         project.getTasks()
-            .register(SpringGraalNativePlugin.CURRENT_TASK, SpringGraalNativeTask.class)
+            .register(SpringGraalNativePlugin.TASK_NAME, SpringGraalNativeTask.class, project.getObjects())
             .configure(task -> {
                 task.dependsOn(SpringGraalNativePlugin.getDependency(project));
 
+                task.toolVersion.set(extension.getToolVersion());
+                task.javaVersion.set(extension.getJavaVersion());
+                task.download.set(extension.getDownload());
                 task.traceClassInitialization.set(extension.getTraceClassInitialization());
                 task.removeSaturatedTypeFlows.set(extension.getRemoveSaturatedTypeFlows());
                 task.reportExceptionStackTraces.set(extension.getReportExceptionStackTraces());

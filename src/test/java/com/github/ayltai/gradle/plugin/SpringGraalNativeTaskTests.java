@@ -7,59 +7,20 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 
-import org.gradle.api.Project;
 import org.gradle.api.Task;
-import org.gradle.api.file.RegularFile;
-import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.internal.provider.MissingValueException;
-import org.gradle.api.tasks.bundling.Jar;
-import org.gradle.internal.impldep.org.junit.rules.TemporaryFolder;
-import org.gradle.testfixtures.ProjectBuilder;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-public final class SpringGraalNativeTaskTests {
+public final class SpringGraalNativeTaskTests extends UnitTests {
     //region Constants
 
-    private static final String PROJECT_NAME    = "sample";
     private static final String CLASS_PATH      = "test";
     private static final String CLASSES_PATH    = "test1:test2";
     private static final String MAIN_CLASS_NAME = "main";
 
     //endregion
-
-    private Project project;
-    private File    jarFile;
-
-    @BeforeEach
-    public void setUp() throws IOException {
-        final TemporaryFolder temporaryFolder = TemporaryFolder.builder().assureDeletion().build();
-        temporaryFolder.create();
-
-        this.project = ProjectBuilder.builder()
-            .withName(SpringGraalNativeTaskTests.PROJECT_NAME)
-            .withProjectDir(temporaryFolder.newFolder())
-            .build();
-
-        this.jarFile = new File(this.getClass()
-            .getClassLoader()
-            .getResource("spring-boot-0.0.1-SNAPSHOT.jar")
-            .getFile());
-
-        final RegularFile regularFile = Mockito.mock(RegularFile.class);
-        Mockito.doReturn(this.jarFile).when(regularFile).getAsFile();
-
-        final RegularFileProperty archiveFile = Mockito.mock(RegularFileProperty.class);
-        Mockito.doReturn(regularFile).when(archiveFile).get();
-
-        final Jar jar = Mockito.spy(this.project.getTasks().create(SpringGraalNativePlugin.DEPENDENT_TASK, Jar.class));
-        Mockito.doReturn(archiveFile).when(jar).getArchiveFile();
-
-        this.project.getPluginManager().apply("com.github.ayltai.spring-graalvm-native-plugin");
-    }
 
     @Test
     public void testSetUp() {
@@ -96,22 +57,9 @@ public final class SpringGraalNativeTaskTests {
     }
 
     @Test
-    public void testExplodeJar() throws IOException {
-        Assertions.assertFalse(this.getOutputDir().exists());
-
-        final SpringGraalNativeTask task = this.getTask();
-        task.explodeJar(this.jarFile, this.getOutputDir());
-
-        Assertions.assertTrue(this.getOutputDir().exists());
-        Assertions.assertTrue(new File(new File(this.getOutputDir(), "BOOT-INF"), "classes").exists());
-        Assertions.assertTrue(new File(new File(this.getOutputDir(), "BOOT-INF"), "lib").exists());
-        Assertions.assertTrue(new File(new File(this.getOutputDir(), "META-INF"), "MANIFEST.MF").exists());
-        Assertions.assertTrue(new File(new File(this.getOutputDir(), "org"), "springframework").exists());
-    }
-
-    @Test
     public void testGetCommandLineArgs() {
         final SpringGraalNativeTask task = this.getTask();
+        task.download.set(Constants.DOWNLOAD_SKIP);
         task.mainClassName.set(SpringGraalNativeTaskTests.MAIN_CLASS_NAME);
 
         List<String> args = StreamSupport.stream(task.getCommandLineArgs(SpringGraalNativeTaskTests.CLASS_PATH).spliterator(), false).collect(Collectors.toList());
@@ -136,12 +84,7 @@ public final class SpringGraalNativeTaskTests {
     }
 
     @Nonnull
-    private File getOutputDir() {
-        return new File(this.project.getBuildDir().getAbsolutePath(), SpringGraalNativeTask.DIR_OUTPUT);
-    }
-
-    @Nonnull
     private <T extends Task> T getTask() {
-        return (T)project.getTasks().getByName(SpringGraalNativePlugin.CURRENT_TASK);
+        return (T)project.getTasks().getByName(SpringGraalNativePlugin.TASK_NAME);
     }
 }

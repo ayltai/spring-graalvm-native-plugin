@@ -10,7 +10,7 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.0.7'
+version '1.1.0'
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -26,6 +26,11 @@ ext {
 }
 
 dependencies {
+    // Utilities
+    implementation 'org.apache.commons:commons-compress:1.20'
+    implementation 'org.apache.commons:commons-lang3:3.11'
+
+    // Testing
     testImplementation 'org.mockito:mockito-core:3.4.5'
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testRuntimeOnly    "org.junit.jupiter:junit-jupiter-engine:$junitVersion"

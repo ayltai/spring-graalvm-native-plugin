@@ -1,27 +1,22 @@
 package com.github.ayltai.gradle.plugin;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.logging.Logger;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.resources.ResourceException;
@@ -29,6 +24,10 @@ import org.gradle.api.tasks.Exec;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.internal.os.OperatingSystem;
+
+import com.github.ayltai.gradle.plugin.internal.ArchiveUtils;
+import com.github.ayltai.gradle.plugin.internal.DownloadUtils;
+import com.github.ayltai.gradle.plugin.internal.PlatformUtils;
 
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +42,15 @@ public class SpringGraalNativeTask extends Exec {
     private static final String DIR_META_INF  = "META-INF";
     private static final String FILE_MANIFEST = "MANIFEST.MF";
 
-    private static final int BUFFER_SIZE = 4096;
+    private static final String DOWNLOAD_URL = "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-%1$s/graalvm-ce-java%2$s-%3$s-%4$s-%1$s.%5$s";
 
     //endregion
 
     //region Properties
 
+    protected final Property<String>     toolVersion;
+    protected final Property<String>     javaVersion;
+    protected final Property<String>     download;
     protected final Property<Boolean>    traceClassInitialization;
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
@@ -72,30 +74,45 @@ public class SpringGraalNativeTask extends Exec {
 
     //endregion
 
-    public SpringGraalNativeTask() {
-        this.traceClassInitialization   = this.getProject().getObjects().property(Boolean.class);
-        this.removeSaturatedTypeFlows   = this.getProject().getObjects().property(Boolean.class);
-        this.reportExceptionStackTraces = this.getProject().getObjects().property(Boolean.class);
-        this.printAnalysisCallTree      = this.getProject().getObjects().property(Boolean.class);
-        this.enabledAllSecurityServices = this.getProject().getObjects().property(Boolean.class);
-        this.staticallyLinked           = this.getProject().getObjects().property(Boolean.class);
-        this.verbose                    = this.getProject().getObjects().property(Boolean.class);
-        this.warnMissingSelectorHints   = this.getProject().getObjects().property(Boolean.class);
-        this.removeUnusedAutoConfig     = this.getProject().getObjects().property(Boolean.class);
-        this.removeYamlSupport          = this.getProject().getObjects().property(Boolean.class);
-        this.removeXmlSupport           = this.getProject().getObjects().property(Boolean.class);
-        this.removeSpelSupport          = this.getProject().getObjects().property(Boolean.class);
-        this.removeJmxSupport           = this.getProject().getObjects().property(Boolean.class);
-        this.verify                     = this.getProject().getObjects().property(Boolean.class);
-        this.springNativeVerbose        = this.getProject().getObjects().property(Boolean.class);
-        this.springNativeMode           = this.getProject().getObjects().property(String.class);
-        this.dumpConfig                 = this.getProject().getObjects().property(String.class);
-        this.mainClassName              = this.getProject().getObjects().property(String.class);
-        this.maxHeapSize                = this.getProject().getObjects().property(String.class);
-        this.initializeAtBuildTime      = this.getProject().getObjects().listProperty(String.class);
+    @Inject
+    public SpringGraalNativeTask(@Nonnull final ObjectFactory factory) {
+        this.toolVersion                = factory.property(String.class);
+        this.javaVersion                = factory.property(String.class);
+        this.download                   = factory.property(String.class);
+        this.traceClassInitialization   = factory.property(Boolean.class);
+        this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
+        this.reportExceptionStackTraces = factory.property(Boolean.class);
+        this.printAnalysisCallTree      = factory.property(Boolean.class);
+        this.enabledAllSecurityServices = factory.property(Boolean.class);
+        this.staticallyLinked           = factory.property(Boolean.class);
+        this.verbose                    = factory.property(Boolean.class);
+        this.warnMissingSelectorHints   = factory.property(Boolean.class);
+        this.removeUnusedAutoConfig     = factory.property(Boolean.class);
+        this.removeYamlSupport          = factory.property(Boolean.class);
+        this.removeXmlSupport           = factory.property(Boolean.class);
+        this.removeSpelSupport          = factory.property(Boolean.class);
+        this.removeJmxSupport           = factory.property(Boolean.class);
+        this.verify                     = factory.property(Boolean.class);
+        this.springNativeVerbose        = factory.property(Boolean.class);
+        this.springNativeMode           = factory.property(String.class);
+        this.dumpConfig                 = factory.property(String.class);
+        this.mainClassName              = factory.property(String.class);
+        this.maxHeapSize                = factory.property(String.class);
+        this.initializeAtBuildTime      = factory.listProperty(String.class);
 
         this.setGroup("build");
         this.setDescription("Support for building Spring Boot applications as GraalVM native images");
+    }
+
+    @Nonnull
+    protected String getDownloadUrl() {
+        final String platform = PlatformUtils.getPlatform();
+        return String.format(SpringGraalNativeTask.DOWNLOAD_URL, this.toolVersion.getOrElse(Constants.DEFAULT_TOOL_VERSION), this.javaVersion.getOrElse(Constants.DEFAULT_JAVA_VERSION), platform, PlatformUtils.getArchitecture(), "windows".equals(platform) ? "zip" : "tar.gz");
+    }
+
+    @Nonnull
+    protected File getToolsDir() {
+        return Paths.get(this.getProject().getBuildDir().getAbsolutePath(), "tmp", SpringGraalNativePlugin.TASK_NAME, DownloadUtils.getOutputPath(this.toolVersion.getOrElse(Constants.DEFAULT_TOOL_VERSION), this.javaVersion.getOrElse(Constants.DEFAULT_JAVA_VERSION))).toFile();
     }
 
     @Nonnull
@@ -109,7 +126,13 @@ public class SpringGraalNativeTask extends Exec {
     @Nonnull
     protected Iterable<String> getCommandLineArgs(@Nonnull final String classPath) {
         final List<String> args = new ArrayList<>();
-        args.add(OperatingSystem.current().isWindows() ? "native-image.cmd" : "native-image");
+
+        if (Constants.DOWNLOAD_SKIP.equals(this.download.getOrElse(Constants.DOWNLOAD_DEFAULT))) {
+            args.add(PlatformUtils.isWindows() ? "native-image.cmd" : "native-image");
+        } else {
+            args.add(Paths.get(this.getToolsDir().getAbsolutePath(), "bin", PlatformUtils.isWindows() ? "native-image.cmd" : "native-image").toString());
+        }
+
         args.add("--allow-incomplete-classpath");
         args.add("--report-unsupported-elements-at-runtime");
         args.add("--no-fallback");
@@ -155,6 +178,8 @@ public class SpringGraalNativeTask extends Exec {
     protected void exec() {
         if (!this.mainClassName.isPresent()) throw new InvalidUserDataException("mainClassName is null");
 
+        DownloadUtils.download(this.getDownloadUrl(), Paths.get(this.getProject().getBuildDir().getAbsolutePath(), "tmp", SpringGraalNativePlugin.TASK_NAME).toFile(), this.download.getOrElse(Constants.DOWNLOAD_DEFAULT));
+
         final File outputDir = new File(this.getProject().getBuildDir().getAbsolutePath(), SpringGraalNativeTask.DIR_OUTPUT);
 
         try {
@@ -194,7 +219,7 @@ public class SpringGraalNativeTask extends Exec {
 
     protected void copyFiles(@Nonnull final Path classesPath, @Nonnull final File outputDir) {
         try {
-            this.explodeJar(((Jar)SpringGraalNativePlugin.getDependency(this.getProject())).getArchiveFile().get().getAsFile(), outputDir);
+            ArchiveUtils.decompressJar(((Jar)SpringGraalNativePlugin.getDependency(this.getProject())).getArchiveFile().get().getAsFile(), outputDir);
 
             SpringGraalNativeTask.LOGGER.info("Copy dependencies to output directory");
 
@@ -202,41 +227,8 @@ public class SpringGraalNativeTask extends Exec {
             if (!destination.exists() && !destination.mkdirs()) throw new ResourceException("Failed to create directory: " + destination.getAbsolutePath());
 
             Files.copy(Paths.get(outputDir.getAbsolutePath(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST), Paths.get(classesPath.toString(), SpringGraalNativeTask.DIR_META_INF, SpringGraalNativeTask.FILE_MANIFEST));
-        } catch (final IOException e) {
+        } catch (final IOException | IllegalAccessException e) {
             throw new ResourceException(e.getMessage(), e);
-        }
-    }
-
-    protected void explodeJar(@Nonnull final File archive, @Nonnull final File outputDir) throws IOException {
-        SpringGraalNativeTask.LOGGER.info("Decompress dependencies");
-
-        try (JarFile jarFile = new JarFile(archive)) {
-            jarFile.stream()
-                .sorted((entry1, entry2) -> (entry1.isDirectory() ? -1 : 0) + (entry2.isDirectory() ? 1 : 0))
-                .forEachOrdered(entry -> {
-                    try {
-                        this.explodeJarEntry(outputDir, jarFile, entry);
-                    } catch (final IOException e) {
-                        throw new ResourceException("Failed to decompress JAR entry: " + entry.getName(), e);
-                    }
-                });
-        }
-    }
-
-    protected void explodeJarEntry(@Nonnull final File outputDir, @Nonnull final JarFile jarFile, @Nonnull final JarEntry entry) throws IOException {
-        final File file = new File(outputDir, entry.getName());
-
-        if (entry.isDirectory()) {
-            if (!file.mkdirs()) throw new IOException("Failed to create folder(s): " + file.getAbsolutePath());
-        } else {
-            final byte[] buffer = new byte[SpringGraalNativeTask.BUFFER_SIZE];
-
-            try (
-                InputStream inputStream   = new BufferedInputStream(jarFile.getInputStream(entry));
-                OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-                int length;
-                while ((length = inputStream.read(buffer)) >= 0) outputStream.write(buffer, 0, length);
-            }
         }
     }
 }
