@@ -14,7 +14,7 @@ public final class PlatformUtils {
     @Nonnull
     public static String getPlatform() {
         final String osName = System.getProperty("os.name");
-        return osName.startsWith("Windows") ? PlatformUtils.WINDOWS : osName.startsWith("Mac") ? "darwin" : osName.startsWith("FreeBSD") ? "freebsd" : osName.startsWith("SunOS") ? "solaris" : "linux";
+        return osName.startsWith("Windows") ? PlatformUtils.WINDOWS : osName.startsWith("Mac") ? PlatformUtils.MACOS : osName.startsWith("FreeBSD") ? "freebsd" : osName.startsWith("SunOS") ? "solaris" : "linux";
     }
 
     @Nonnull
