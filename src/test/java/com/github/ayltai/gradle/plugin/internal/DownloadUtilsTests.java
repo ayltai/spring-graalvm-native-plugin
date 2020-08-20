@@ -16,7 +16,7 @@ public final class DownloadUtilsTests extends UnitTests {
     @Test
     public void testDownload() {
         final String downloadUrl = this.getDownloadUrl();
-        final File   outputFile  = Paths.get(this.getOutputDir().getAbsolutePath(), DownloadUtils.getOutputPath("20.1.0", "8")).toFile();
+        final File   outputFile  = Paths.get(this.getOutputDir().getAbsolutePath(), DownloadUtils.getOutputPath(Constants.DEFAULT_TOOL_VERSION, Constants.DEFAULT_JAVA_VERSION)).toFile();
 
         Assertions.assertFalse(outputFile.exists());
 
