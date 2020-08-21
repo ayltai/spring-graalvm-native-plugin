@@ -21,7 +21,10 @@ public class SpringGraalNativeExtension {
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
     protected final Property<Boolean>    printAnalysisCallTree;
-    protected final Property<Boolean>    enabledAllSecurityServices;
+    protected final Property<Boolean>    enableAllSecurityServices;
+    protected final Property<Boolean>    enableHttp;
+    protected final Property<Boolean>    enableHttps;
+    protected final ListProperty<String> enableUrlProtocols;
     protected final Property<Boolean>    staticallyLinked;
     protected final Property<Boolean>    warnMissingSelectorHints;
     protected final Property<Boolean>    removeUnusedAutoConfig;
@@ -49,7 +52,10 @@ public class SpringGraalNativeExtension {
         this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
         this.reportExceptionStackTraces = factory.property(Boolean.class);
         this.printAnalysisCallTree      = factory.property(Boolean.class);
-        this.enabledAllSecurityServices = factory.property(Boolean.class);
+        this.enableAllSecurityServices  = factory.property(Boolean.class);
+        this.enableHttp                 = factory.property(Boolean.class);
+        this.enableHttps                = factory.property(Boolean.class);
+        this.enableUrlProtocols         = factory.listProperty(String.class);
         this.staticallyLinked           = factory.property(Boolean.class);
         this.verbose                    = factory.property(Boolean.class);
         this.warnMissingSelectorHints   = factory.property(Boolean.class);
@@ -70,7 +76,7 @@ public class SpringGraalNativeExtension {
     //region Properties
 
     /**
-     * Returns the version of GraalVM Community Edition to download. Default is {@code 20.1.0}.
+     * Returns the version of GraalVM Community Edition to download. Default is {@code 20.2.0}.
      * @return The version of GraalVM Community Edition to download.
      */
     public String getToolVersion() {
@@ -185,16 +191,65 @@ public class SpringGraalNativeExtension {
      * Returns {@code true} if security services are enabled for HTTPS and crypto applications.
      * @return {@code true} if security services are enabled for HTTPS and crypto applications.
      */
-    public boolean getEnabledAllSecurityServices() {
-        return this.enabledAllSecurityServices.getOrElse(false);
+    public boolean getEnableAllSecurityServices() {
+        return this.enableAllSecurityServices.getOrElse(false);
     }
 
     /**
      * Sets to {@code true} if security services are enabled for HTTPS and crypto applications.
-     * @param enabledAllSecurityServices {@code true} if security services are enabled for HTTPS and crypto applications.
+     * @param enableAllSecurityServices {@code true} if security services are enabled for HTTPS and crypto applications.
      */
-    public void setEnabledAllSecurityServices(final boolean enabledAllSecurityServices) {
-        this.enabledAllSecurityServices.set(enabledAllSecurityServices);
+    public void setEnableAllSecurityServices(final boolean enableAllSecurityServices) {
+        this.enableAllSecurityServices.set(enableAllSecurityServices);
+    }
+
+    /**
+     * Returns {@code true} if HTTP support is enabled.
+     * @return {@code true} if HTTP support is enabled.
+     */
+    public boolean getEnableHttp() {
+        return this.enableHttp.getOrElse(false);
+    }
+
+    /**
+     * Sets to {@code true} if HTTP support is enabled.
+     * @param enableHttp {@code true} if HTTP support is enabled.
+     */
+    public void setEnableHttp(final boolean enableHttp) {
+        this.enableHttp.set(enableHttp);
+    }
+
+    /**
+     * Returns {@code true} if HTTPS support is enabled.
+     * @return {@code true} if HTTPS support is enabled.
+     */
+    public boolean getEnableHttps() {
+        return this.enableHttps.getOrElse(false);
+    }
+
+    /**
+     * Sets to {@code true} if HTTPS support is enabled.
+     * @param enableHttps {@code true} if HTTPS support is enabled.
+     */
+    public void setEnableHttps(final boolean enableHttps) {
+        this.enableHttps.set(enableHttp);
+    }
+
+    /**
+     * Returns a list of URL protocols to be enabled.
+     * @return A list of URL protocols to be enabled.
+     */
+    @Nullable
+    public List<String> getEnableUrlProtocols() {
+        return this.enableUrlProtocols.getOrNull();
+    }
+
+    /**
+     * Specifies a list of URL protocols to be enabled.
+     * @param enableUrlProtocols A list of URL protocols to be enabled.
+     */
+    public void setEnableUrlProtocols(@Nullable final List<String> enableUrlProtocols) {
+        this.enableUrlProtocols.set(enableUrlProtocols);
     }
 
     /**

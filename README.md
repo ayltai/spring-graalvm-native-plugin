@@ -29,7 +29,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.1.1'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.2.0'
 }
 ```
 
@@ -43,7 +43,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.1.1'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.2.0'
     }
 }
 
@@ -54,7 +54,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.1.1'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.2.0'
 }
 ```
 
@@ -68,7 +68,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.1.1')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.2.0')
     }
 }
 ```
@@ -118,7 +118,10 @@ public class TomcatApplication {
 | `removeSaturatedTypeFlows` | `boolean` | Reduces build time and decrease build memory consumption, especially for big projects. |
 | `reportExceptionStackTraces` | `boolean` | Provides more detail should something go wrong. |
 | `printAnalysisCallTree` | `boolean` | Helps to find what classes, methods, and fields are used and why. You can find more details in GraalVM [reports documentation](https://github.com/oracle/graal/blob/master/substratevm/REPORTS.md). |
-| `enabledAllSecurityServices` | `boolean` | Required for HTTPS and crypto. |
+| `enableAllSecurityServices` | `boolean` | Adds all security service classes to the generated image. Required for HTTPS and crypto. |
+| `enableHttp` | `boolean` | Enables HTTP support in the generated image. |
+| `enableHttps` | `boolean` | Enables HTTPS support in the generated image. |
+| `enableUrlProtocols` | `List<String>` | Specifies a list of URL protocols to be enabled in the generated image. |
 | `staticallyLinked` | `boolean` | Builds a statically linked executable, useful to deploy on a `FROM scratch` Docker image. |
 | `warnMissingSelectorHints` | `boolean` | Switches the feature from a hard error for missing hints to a warning. See the [Troubleshooting](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.7.1/spring-graalvm-native-docs-0.7.1.zip!/reference/index.html#troubleshooting) section for more details on this. |
 | `removeUnusedAutoConfig` | `boolean` | Disables removal of unused configurations. |

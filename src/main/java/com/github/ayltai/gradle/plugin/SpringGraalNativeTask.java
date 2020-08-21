@@ -56,7 +56,10 @@ public class SpringGraalNativeTask extends Exec {
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
     protected final Property<Boolean>    printAnalysisCallTree;
-    protected final Property<Boolean>    enabledAllSecurityServices;
+    protected final Property<Boolean>    enableAllSecurityServices;
+    protected final Property<Boolean>    enableHttp;
+    protected final Property<Boolean>    enableHttps;
+    protected final ListProperty<String> enableUrlProtocols;
     protected final Property<Boolean>    staticallyLinked;
     protected final Property<Boolean>    verbose;
     protected final Property<Boolean>    warnMissingSelectorHints;
@@ -84,7 +87,10 @@ public class SpringGraalNativeTask extends Exec {
         this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
         this.reportExceptionStackTraces = factory.property(Boolean.class);
         this.printAnalysisCallTree      = factory.property(Boolean.class);
-        this.enabledAllSecurityServices = factory.property(Boolean.class);
+        this.enableAllSecurityServices  = factory.property(Boolean.class);
+        this.enableHttp                 = factory.property(Boolean.class);
+        this.enableHttps                = factory.property(Boolean.class);
+        this.enableUrlProtocols         = factory.listProperty(String.class);
         this.staticallyLinked           = factory.property(Boolean.class);
         this.verbose                    = factory.property(Boolean.class);
         this.warnMissingSelectorHints   = factory.property(Boolean.class);
@@ -102,7 +108,7 @@ public class SpringGraalNativeTask extends Exec {
         this.initializeAtBuildTime      = factory.listProperty(String.class);
 
         this.setGroup("build");
-        this.setDescription("Support for building Spring Boot applications as GraalVM native images");
+        this.setDescription("Builds a native image for Spring Boot applications using GraalVM tools");
     }
 
     @Nonnull
@@ -146,12 +152,15 @@ public class SpringGraalNativeTask extends Exec {
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+RemoveSaturatedTypeFlows", this.removeSaturatedTypeFlows);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+ReportExceptionStackTraces", this.reportExceptionStackTraces);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+PrintAnalysisCallTree", this.printAnalysisCallTree);
-        SpringGraalNativeTask.appendCommandLineArg(args, "--enable-all-security-services", this.enabledAllSecurityServices);
+        SpringGraalNativeTask.appendCommandLineArg(args, "--enable-all-security-services", this.enableAllSecurityServices);
+        SpringGraalNativeTask.appendCommandLineArg(args, "--enable-http", this.enableHttp);
+        SpringGraalNativeTask.appendCommandLineArg(args, "--enable-https", this.enableHttps);
         SpringGraalNativeTask.appendCommandLineArg(args, "--static", this.staticallyLinked);
         SpringGraalNativeTask.appendCommandLineArg(args, "--verbose", this.verbose);
         SpringGraalNativeTask.appendCommandLineArg(args, "-Dspring.native.missing-selector-hints=warning", this.warnMissingSelectorHints);
         SpringGraalNativeTask.appendCommandLineArg(args, "-Dspring.native.remove-unused-autoconfig=true", this.removeUnusedAutoConfig);
 
+        if (this.enableUrlProtocols.isPresent() && !this.enableUrlProtocols.get().isEmpty()) args.add("--enable-url-protocols=" + String.join(",", this.enableUrlProtocols.get()));
         if (this.removeYamlSupport.isPresent()) args.add("-Dspring.native.remove-yaml-support=" + this.removeYamlSupport.get());
         if (this.removeXmlSupport.isPresent()) args.add("-Dspring.native.remove-xml-support=" + this.removeXmlSupport.get());
         if (this.removeSpelSupport.isPresent()) args.add("-Dspring.native.remove-spel-support=" + this.removeSpelSupport.get());
