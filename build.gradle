@@ -10,7 +10,7 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.2.0'
+version '1.2.1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -31,7 +31,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.11'
 
     // Testing
-    testImplementation 'org.mockito:mockito-core:3.5.2'
+    testImplementation 'org.mockito:mockito-core:3.5.5'
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testRuntimeOnly    "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 }
@@ -68,7 +68,7 @@ tasks.withType(Checkstyle) {
 //region SpotBugs configurations
 
 spotbugs {
-    toolVersion.set('4.0.3')
+    toolVersion.set('4.1.2')
     ignoreFailures.set(true)
     excludeFilter.set(file('./spotbugs-exclude.xml'))
 

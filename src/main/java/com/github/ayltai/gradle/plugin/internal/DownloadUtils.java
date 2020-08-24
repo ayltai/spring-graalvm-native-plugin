@@ -31,7 +31,7 @@ public final class DownloadUtils {
     public static void download(@Nonnull final  String downloadUrl, @Nonnull final File outputDir, @Nonnull final String downloadStrategy) {
         if (!outputDir.exists() && !outputDir.mkdirs()) throw new ResourceException("Failed to create temporary directory: " + outputDir.getAbsolutePath());
 
-        final File outputFile = new File(outputDir, Paths.get(downloadUrl).getFileName().toString());
+        final File outputFile = new File(outputDir, downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1));
         if (Constants.DOWNLOAD_DEFAULT.equals(downloadStrategy) && !outputFile.exists() || Constants.DOWNLOAD_ALWAYS.equals(downloadStrategy)) {
             try (
                 ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(downloadUrl).openStream());
