@@ -21,6 +21,7 @@ public class SpringGraalNativeExtension {
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
     protected final Property<Boolean>    printAnalysisCallTree;
+    protected final Property<Boolean>    disableToolchainChecking;
     protected final Property<Boolean>    enableAllSecurityServices;
     protected final Property<Boolean>    enableHttp;
     protected final Property<Boolean>    enableHttps;
@@ -52,6 +53,7 @@ public class SpringGraalNativeExtension {
         this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
         this.reportExceptionStackTraces = factory.property(Boolean.class);
         this.printAnalysisCallTree      = factory.property(Boolean.class);
+        this.disableToolchainChecking   = factory.property(Boolean.class);
         this.enableAllSecurityServices  = factory.property(Boolean.class);
         this.enableHttp                 = factory.property(Boolean.class);
         this.enableHttps                = factory.property(Boolean.class);
@@ -185,6 +187,22 @@ public class SpringGraalNativeExtension {
      */
     public void setPrintAnalysisCallTree(final boolean printAnalysisCallTree) {
         this.printAnalysisCallTree.set(printAnalysisCallTree);
+    }
+
+    /**
+     * Returns {@code true} to prevent native-toolchain checking.
+     * @return {@code true} to prevent native-toolchain checking.
+     */
+    public boolean getDisableToolchainChecking() {
+        return this.disableToolchainChecking.getOrElse(false);
+    }
+
+    /**
+     * Sets to {@code true} to prevent native-toolchain checking.
+     * @param disableToolchainChecking {@code true} to prevent native-toolchain checking.
+     */
+    public void setDisableToolchainChecking(final boolean disableToolchainChecking) {
+        this.disableToolchainChecking.set(disableToolchainChecking);
     }
 
     /**

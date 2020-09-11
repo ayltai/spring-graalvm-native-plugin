@@ -42,6 +42,7 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
                 task.removeSaturatedTypeFlows.set(extension.getRemoveSaturatedTypeFlows());
                 task.reportExceptionStackTraces.set(extension.getReportExceptionStackTraces());
                 task.printAnalysisCallTree.set(extension.getPrintAnalysisCallTree());
+                task.disableToolchainChecking.set(extension.getDisableToolchainChecking());
                 task.enableAllSecurityServices.set(extension.getEnableAllSecurityServices());
                 task.enableHttp.set(extension.getEnableHttp());
                 task.enableHttps.set(extension.getEnableHttps());

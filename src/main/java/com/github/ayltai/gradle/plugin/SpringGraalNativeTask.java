@@ -56,6 +56,7 @@ public class SpringGraalNativeTask extends Exec {
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
     protected final Property<Boolean>    printAnalysisCallTree;
+    protected final Property<Boolean>    disableToolchainChecking;
     protected final Property<Boolean>    enableAllSecurityServices;
     protected final Property<Boolean>    enableHttp;
     protected final Property<Boolean>    enableHttps;
@@ -87,6 +88,7 @@ public class SpringGraalNativeTask extends Exec {
         this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
         this.reportExceptionStackTraces = factory.property(Boolean.class);
         this.printAnalysisCallTree      = factory.property(Boolean.class);
+        this.disableToolchainChecking   = factory.property(Boolean.class);
         this.enableAllSecurityServices  = factory.property(Boolean.class);
         this.enableHttp                 = factory.property(Boolean.class);
         this.enableHttps                = factory.property(Boolean.class);
@@ -152,6 +154,7 @@ public class SpringGraalNativeTask extends Exec {
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+RemoveSaturatedTypeFlows", this.removeSaturatedTypeFlows);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+ReportExceptionStackTraces", this.reportExceptionStackTraces);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+PrintAnalysisCallTree", this.printAnalysisCallTree);
+        SpringGraalNativeTask.appendCommandLineArg(args, "-H:-CheckToolchain", this.disableToolchainChecking);
         SpringGraalNativeTask.appendCommandLineArg(args, "--enable-all-security-services", this.enableAllSecurityServices);
         SpringGraalNativeTask.appendCommandLineArg(args, "--enable-http", this.enableHttp);
         SpringGraalNativeTask.appendCommandLineArg(args, "--enable-https", this.enableHttps);
