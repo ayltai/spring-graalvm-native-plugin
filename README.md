@@ -110,7 +110,7 @@ public class TomcatApplication {
 ## Configuration
 | Property | Type | Description |
 |----------|------|-------------|
-| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `20.1.0`. |
+| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `20.2.0`. |
 | `javaVersion` | `String` | The JDK version to be downloaded with GraalVM Community Edition. Default to `8`. |
 | `download` | `String` | Specify when to download GraalVM Community Edition. Supports `default` which downloads GraalVM tools only if they are not already downloaded, `always` which always (re-)download GraalVM tools, and `skip` which skips downloading GraalVM tools and assumes they are already installed. |
 | `mainClassName` (Required) | `String` | The fully qualified name of the Java class that contains a `main` method for the entry point of the Native Image executable. |
