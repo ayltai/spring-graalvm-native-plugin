@@ -10,7 +10,7 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.2.3'
+version '1.2.4'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,7 +43,7 @@ test {
 //region Checkstyle configurations
 
 checkstyle {
-    toolVersion    = '8.35'
+    toolVersion    = '8.37'
     configFile     = rootProject.file('./checkstyle.xml')
     ignoreFailures = true
     showViolations = true
@@ -68,7 +68,7 @@ tasks.withType(Checkstyle) {
 //region SpotBugs configurations
 
 spotbugs {
-    toolVersion.set('4.1.2')
+    toolVersion.set('4.1.4')
     ignoreFailures.set(true)
     excludeFilter.set(file('./spotbugs-exclude.xml'))
 
