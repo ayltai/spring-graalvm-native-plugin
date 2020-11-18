@@ -29,6 +29,7 @@ import org.gradle.internal.os.OperatingSystem;
 import com.github.ayltai.gradle.plugin.internal.ArchiveUtils;
 import com.github.ayltai.gradle.plugin.internal.DownloadUtils;
 import com.github.ayltai.gradle.plugin.internal.PlatformUtils;
+import com.github.ayltai.gradle.plugin.internal.VersionNumberComparator;
 
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,8 @@ public class SpringGraalNativeTask extends Exec {
     protected final Property<String>     javaVersion;
     protected final Property<String>     download;
     protected final Property<Boolean>    traceClassInitialization;
+    protected final Property<Boolean>    traceClassInitializationEnabled;
+    protected final ListProperty<String> traceClassInitializationFor;
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
     protected final Property<Boolean>    printAnalysisCallTree;
@@ -81,33 +84,35 @@ public class SpringGraalNativeTask extends Exec {
 
     @Inject
     public SpringGraalNativeTask(@Nonnull final ObjectFactory factory) {
-        this.toolVersion                = factory.property(String.class);
-        this.javaVersion                = factory.property(String.class);
-        this.download                   = factory.property(String.class);
-        this.traceClassInitialization   = factory.property(Boolean.class);
-        this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
-        this.reportExceptionStackTraces = factory.property(Boolean.class);
-        this.printAnalysisCallTree      = factory.property(Boolean.class);
-        this.disableToolchainChecking   = factory.property(Boolean.class);
-        this.enableAllSecurityServices  = factory.property(Boolean.class);
-        this.enableHttp                 = factory.property(Boolean.class);
-        this.enableHttps                = factory.property(Boolean.class);
-        this.enableUrlProtocols         = factory.listProperty(String.class);
-        this.staticallyLinked           = factory.property(Boolean.class);
-        this.verbose                    = factory.property(Boolean.class);
-        this.warnMissingSelectorHints   = factory.property(Boolean.class);
-        this.removeUnusedAutoConfig     = factory.property(Boolean.class);
-        this.removeYamlSupport          = factory.property(Boolean.class);
-        this.removeXmlSupport           = factory.property(Boolean.class);
-        this.removeSpelSupport          = factory.property(Boolean.class);
-        this.removeJmxSupport           = factory.property(Boolean.class);
-        this.verify                     = factory.property(Boolean.class);
-        this.springNativeVerbose        = factory.property(Boolean.class);
-        this.springNativeMode           = factory.property(String.class);
-        this.dumpConfig                 = factory.property(String.class);
-        this.mainClassName              = factory.property(String.class);
-        this.maxHeapSize                = factory.property(String.class);
-        this.initializeAtBuildTime      = factory.listProperty(String.class);
+        this.toolVersion                     = factory.property(String.class);
+        this.javaVersion                     = factory.property(String.class);
+        this.download                        = factory.property(String.class);
+        this.traceClassInitialization        = factory.property(Boolean.class);
+        this.traceClassInitializationEnabled = factory.property(Boolean.class);
+        this.traceClassInitializationFor     = factory.listProperty(String.class);
+        this.removeSaturatedTypeFlows        = factory.property(Boolean.class);
+        this.reportExceptionStackTraces      = factory.property(Boolean.class);
+        this.printAnalysisCallTree           = factory.property(Boolean.class);
+        this.disableToolchainChecking        = factory.property(Boolean.class);
+        this.enableAllSecurityServices       = factory.property(Boolean.class);
+        this.enableHttp                      = factory.property(Boolean.class);
+        this.enableHttps                     = factory.property(Boolean.class);
+        this.enableUrlProtocols              = factory.listProperty(String.class);
+        this.staticallyLinked                = factory.property(Boolean.class);
+        this.verbose                         = factory.property(Boolean.class);
+        this.warnMissingSelectorHints        = factory.property(Boolean.class);
+        this.removeUnusedAutoConfig          = factory.property(Boolean.class);
+        this.removeYamlSupport               = factory.property(Boolean.class);
+        this.removeXmlSupport                = factory.property(Boolean.class);
+        this.removeSpelSupport               = factory.property(Boolean.class);
+        this.removeJmxSupport                = factory.property(Boolean.class);
+        this.verify                          = factory.property(Boolean.class);
+        this.springNativeVerbose             = factory.property(Boolean.class);
+        this.springNativeMode                = factory.property(String.class);
+        this.dumpConfig                      = factory.property(String.class);
+        this.mainClassName                   = factory.property(String.class);
+        this.maxHeapSize                     = factory.property(String.class);
+        this.initializeAtBuildTime           = factory.listProperty(String.class);
 
         this.setGroup("build");
         this.setDescription("Builds a native image for Spring Boot applications using GraalVM tools");
@@ -150,7 +155,12 @@ public class SpringGraalNativeTask extends Exec {
         args.add("--no-server");
         args.add("--install-exit-handlers");
 
-        SpringGraalNativeTask.appendCommandLineArg(args, "-H:+TraceClassInitialization", this.traceClassInitialization);
+        if (VersionNumberComparator.getInstance().compare(this.toolVersion.getOrElse(Constants.DEFAULT_TOOL_VERSION), Constants.DEFAULT_TOOL_VERSION) < 0) {
+            SpringGraalNativeTask.appendCommandLineArg(args, "-H:+TraceClassInitialization", this.traceClassInitializationEnabled.getOrNull() == null ? this.traceClassInitialization : this.traceClassInitializationEnabled);
+        } else {
+            if (this.traceClassInitializationFor.isPresent() && !this.traceClassInitializationFor.get().isEmpty()) args.add("--trace-class-initialization=" + String.join(",", this.traceClassInitializationFor.get()));
+        }
+
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+RemoveSaturatedTypeFlows", this.removeSaturatedTypeFlows);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+ReportExceptionStackTraces", this.reportExceptionStackTraces);
         SpringGraalNativeTask.appendCommandLineArg(args, "-H:+PrintAnalysisCallTree", this.printAnalysisCallTree);

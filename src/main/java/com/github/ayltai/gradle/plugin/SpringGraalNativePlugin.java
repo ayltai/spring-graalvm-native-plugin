@@ -39,6 +39,8 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
                 task.javaVersion.set(extension.getJavaVersion());
                 task.download.set(extension.getDownload());
                 task.traceClassInitialization.set(extension.getTraceClassInitialization());
+                task.traceClassInitializationEnabled.set(extension.getTraceClassInitializationEnabled());
+                task.traceClassInitializationFor.set(extension.getTraceClassInitializationFor());
                 task.removeSaturatedTypeFlows.set(extension.getRemoveSaturatedTypeFlows());
                 task.reportExceptionStackTraces.set(extension.getReportExceptionStackTraces());
                 task.printAnalysisCallTree.set(extension.getPrintAnalysisCallTree());

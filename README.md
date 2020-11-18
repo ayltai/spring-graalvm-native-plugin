@@ -29,7 +29,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.2.3'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.3.0'
 }
 ```
 
@@ -43,7 +43,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.2.3'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.3.0'
     }
 }
 
@@ -54,7 +54,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.2.3'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.3.0'
 }
 ```
 
@@ -68,7 +68,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.2.3')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.3.0')
     }
 }
 ```
@@ -79,7 +79,6 @@ This plugin uses the following example Gradle extension for configuration:
 nativeImage {
     mainClassName = 'com.example.springboot.Application'
 
-    traceClassInitialization   = true
     reportExceptionStackTraces = true
     removeUnusedAutoConfig     = true
     removeYamlSupport          = true
@@ -110,11 +109,13 @@ public class TomcatApplication {
 ## Configuration
 | Property | Type | Description |
 |----------|------|-------------|
-| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `20.2.0`. |
+| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `20.3.0`. |
 | `javaVersion` | `String` | The JDK version to be downloaded with GraalVM Community Edition. Default to `8`. |
 | `download` | `String` | Specify when to download GraalVM Community Edition. Supports `default` which downloads GraalVM tools only if they are not already downloaded, `always` which always (re-)download GraalVM tools, and `skip` which skips downloading GraalVM tools and assumes they are already installed. |
 | `mainClassName` (Required) | `String` | The fully qualified name of the Java class that contains a `main` method for the entry point of the Native Image executable. |
-| `traceClassInitialization` | `boolean` | Provides useful information to debug class initialization issues. |
+| `traceClassInitialization` | `boolean` | **(Deprecated. Use `traceClassInitializationEnabled` if you use GraalVM 20.2.0 or below, and `traceClassInitializationFor` if you use GraalVM 20.3.0 or above.)** Provides useful information to debug class initialization issues. |
+| `traceClassInitializationEnabled` | `boolean` | **(For GraalVM 20.2.0 or below)** Provides useful information to debug class initialization issues. |
+| `traceClassInitializationFor` | `List<String>` | **(For GraalVM 20.3.0 or above)** A comma-separated list of fully qualified class names that class initialization is traced for. |
 | `removeSaturatedTypeFlows` | `boolean` | Reduces build time and decrease build memory consumption, especially for big projects. |
 | `reportExceptionStackTraces` | `boolean` | Provides more detail should something go wrong. |
 | `printAnalysisCallTree` | `boolean` | Helps to find what classes, methods, and fields are used and why. You can find more details in GraalVM [reports documentation](https://github.com/oracle/graal/blob/master/substratevm/REPORTS.md). |
