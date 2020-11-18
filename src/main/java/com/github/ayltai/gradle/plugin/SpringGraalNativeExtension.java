@@ -18,6 +18,8 @@ public class SpringGraalNativeExtension {
     protected final Property<String>     javaVersion;
     protected final Property<String>     download;
     protected final Property<Boolean>    traceClassInitialization;
+    protected final Property<Boolean>    traceClassInitializationEnabled;
+    protected final ListProperty<String> traceClassInitializationFor;
     protected final Property<Boolean>    removeSaturatedTypeFlows;
     protected final Property<Boolean>    reportExceptionStackTraces;
     protected final Property<Boolean>    printAnalysisCallTree;
@@ -46,33 +48,35 @@ public class SpringGraalNativeExtension {
 
     @Inject
     public SpringGraalNativeExtension(@Nonnull final ObjectFactory factory) {
-        this.toolVersion                = factory.property(String.class);
-        this.javaVersion                = factory.property(String.class);
-        this.download                   = factory.property(String.class);
-        this.traceClassInitialization   = factory.property(Boolean.class);
-        this.removeSaturatedTypeFlows   = factory.property(Boolean.class);
-        this.reportExceptionStackTraces = factory.property(Boolean.class);
-        this.printAnalysisCallTree      = factory.property(Boolean.class);
-        this.disableToolchainChecking   = factory.property(Boolean.class);
-        this.enableAllSecurityServices  = factory.property(Boolean.class);
-        this.enableHttp                 = factory.property(Boolean.class);
-        this.enableHttps                = factory.property(Boolean.class);
-        this.enableUrlProtocols         = factory.listProperty(String.class);
-        this.staticallyLinked           = factory.property(Boolean.class);
-        this.verbose                    = factory.property(Boolean.class);
-        this.warnMissingSelectorHints   = factory.property(Boolean.class);
-        this.removeUnusedAutoConfig     = factory.property(Boolean.class);
-        this.removeYamlSupport          = factory.property(Boolean.class);
-        this.removeXmlSupport           = factory.property(Boolean.class);
-        this.removeSpelSupport          = factory.property(Boolean.class);
-        this.removeJmxSupport           = factory.property(Boolean.class);
-        this.verify                     = factory.property(Boolean.class);
-        this.springNativeVerbose        = factory.property(Boolean.class);
-        this.springNativeMode           = factory.property(String.class);
-        this.dumpConfig                 = factory.property(String.class);
-        this.mainClassName              = factory.property(String.class);
-        this.maxHeapSize                = factory.property(String.class);
-        this.initializeAtBuildTime      = factory.listProperty(String.class);
+        this.toolVersion                     = factory.property(String.class);
+        this.javaVersion                     = factory.property(String.class);
+        this.download                        = factory.property(String.class);
+        this.traceClassInitialization        = factory.property(Boolean.class);
+        this.traceClassInitializationEnabled = factory.property(Boolean.class);
+        this.traceClassInitializationFor     = factory.listProperty(String.class);
+        this.removeSaturatedTypeFlows        = factory.property(Boolean.class);
+        this.reportExceptionStackTraces      = factory.property(Boolean.class);
+        this.printAnalysisCallTree           = factory.property(Boolean.class);
+        this.disableToolchainChecking        = factory.property(Boolean.class);
+        this.enableAllSecurityServices       = factory.property(Boolean.class);
+        this.enableHttp                      = factory.property(Boolean.class);
+        this.enableHttps                     = factory.property(Boolean.class);
+        this.enableUrlProtocols              = factory.listProperty(String.class);
+        this.staticallyLinked                = factory.property(Boolean.class);
+        this.verbose                         = factory.property(Boolean.class);
+        this.warnMissingSelectorHints        = factory.property(Boolean.class);
+        this.removeUnusedAutoConfig          = factory.property(Boolean.class);
+        this.removeYamlSupport               = factory.property(Boolean.class);
+        this.removeXmlSupport                = factory.property(Boolean.class);
+        this.removeSpelSupport               = factory.property(Boolean.class);
+        this.removeJmxSupport                = factory.property(Boolean.class);
+        this.verify                          = factory.property(Boolean.class);
+        this.springNativeVerbose             = factory.property(Boolean.class);
+        this.springNativeMode                = factory.property(String.class);
+        this.dumpConfig                      = factory.property(String.class);
+        this.mainClassName                   = factory.property(String.class);
+        this.maxHeapSize                     = factory.property(String.class);
+        this.initializeAtBuildTime           = factory.listProperty(String.class);
     }
 
     //region Properties
@@ -128,6 +132,7 @@ public class SpringGraalNativeExtension {
     /**
      * Returns {@code true} if useful information to debug class initialization issues is provided.
      * @return {@code true} if useful information to debug class initialization issues is provided.
+     * @deprecated Use {@link #getTraceClassInitializationEnabled()} instead.
      */
     public boolean getTraceClassInitialization() {
         return this.traceClassInitialization.getOrElse(false);
@@ -136,9 +141,47 @@ public class SpringGraalNativeExtension {
     /**
      * Sets to {@code true} if useful information to debug class initialization issues is provided.
      * @param traceClassInitialization {@code true} if useful information to debug class initialization issues is provided.
+     * @deprecated Use {@link #setTraceClassInitializationEnabled(boolean)} instead.
      */
     public void setTraceClassInitialization(final boolean traceClassInitialization) {
         this.traceClassInitialization.set(traceClassInitialization);
+    }
+
+    /**
+     * Returns {@code true} if useful information to debug class initialization issues is provided.
+     * <p>This is only valid for GraalVM 20.2.0 or below. For GraalVM 20.3.0 or above, use {@link #getTraceClassInitializationFor()}.</p>
+     * @return {@code true} if useful information to debug class initialization issues is provided.
+     */
+    public boolean getTraceClassInitializationEnabled() {
+        return this.traceClassInitializationEnabled.getOrElse(false);
+    }
+
+    /**
+     * Sets to {@code true} if useful information to debug class initialization issues is provided.
+     * <p>This is only valid for GraalVM 20.2.0 or below. For GraalVM 20.3.0 or above, use {@link #setTraceClassInitializationFor(List)}.</p>
+     * @param traceClassInitializationEnabled {@code true} if useful information to debug class initialization issues is provided.
+     */
+    public void setTraceClassInitializationEnabled(final boolean traceClassInitializationEnabled) {
+        this.traceClassInitializationEnabled.set(traceClassInitializationEnabled);
+    }
+
+    /**
+     * Returns a comma-separated list of fully qualified class names that class initialization is traced for.
+     * <p>This is only valid for GraalVM 20.3.0 or above. For GraalVM 20.2.0 or below, use {@link #getTraceClassInitializationEnabled()}.</p>
+     * @return A comma-separated list of fully qualified class names that class initialization is traced for.
+     */
+    @Nullable
+    public List<String> getTraceClassInitializationFor() {
+        return this.traceClassInitializationFor.getOrNull();
+    }
+
+    /**
+     * Sets a comma-separated list of fully qualified class names that class initialization is traced for.
+     * <p>This is valid only for GraalVM 20.3.0 or above. For GraalVM 20.2.0 or below, use {@link #setTraceClassInitializationEnabled(boolean)}.</p>
+     * @param traceClassInitializationFor A comma-separated list of fully qualified class names that class initialization is traced for.
+     */
+    public void setTraceClassInitializationFor(@Nullable final List<String> traceClassInitializationFor) {
+        this.traceClassInitializationFor.set(traceClassInitializationFor);
     }
 
     /**
