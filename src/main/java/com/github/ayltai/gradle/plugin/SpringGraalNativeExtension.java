@@ -10,7 +10,7 @@ import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 
 public class SpringGraalNativeExtension {
-    private static final String SPRING_NATIVE_MODE = SpringNativeMode.FEATURE;
+    private static final String SPRING_NATIVE_MODE = SpringNativeMode.REFLECTION;
 
     //region Gradle plugin properties
 
@@ -479,7 +479,8 @@ public class SpringGraalNativeExtension {
      * Returns the mode that switches how much configuration the feature actually provides to native-image.
      * @return The mode that switches how much configuration the feature actually provides to native-image.
      * @see SpringNativeMode#AGENT
-     * @see SpringNativeMode#FEATURE
+     * @see SpringNativeMode#INIT
+     * @see SpringNativeMode#REFLECTION
      * @see SpringNativeMode#FUNCTIONAL
      */
     @Nonnull

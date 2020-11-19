@@ -7,9 +7,14 @@ public final class SpringNativeMode {
     public static final String AGENT = "agent";
 
     /**
-     * Provides everything (including deep analysis of auto-configuration).
+     * Initialization-only configuration provided from the feature.
      */
-    public static final String FEATURE = "feature";
+    public static final String INIT = "init";
+
+    /**
+     * Default mode, provide everything
+     */
+    public static final String REFLECTION = "reflection";
 
     /**
      * This should be used when working with functional bean registration (Spring Fu style). In this mode the feature will provide initialization and resource configuration but nothing more.
