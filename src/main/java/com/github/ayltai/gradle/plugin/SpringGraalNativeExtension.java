@@ -134,6 +134,7 @@ public class SpringGraalNativeExtension {
      * @return {@code true} if useful information to debug class initialization issues is provided.
      * @deprecated Use {@link #getTraceClassInitializationEnabled()} instead.
      */
+    @Deprecated
     public boolean getTraceClassInitialization() {
         return this.traceClassInitialization.getOrElse(false);
     }
@@ -153,7 +154,6 @@ public class SpringGraalNativeExtension {
      * <p>This is only valid for GraalVM 20.2.0 or below. For GraalVM 20.3.0 or above, use {@link #getTraceClassInitializationFor()}.</p>
      * @return {@code true} if useful information to debug class initialization issues is provided.
      */
-    @Deprecated
     public boolean getTraceClassInitializationEnabled() {
         return this.traceClassInitializationEnabled.getOrElse(false);
     }
