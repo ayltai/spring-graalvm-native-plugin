@@ -10,7 +10,7 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.4.0'
+version '1.4.1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,7 +43,7 @@ test {
 //region Checkstyle configurations
 
 checkstyle {
-    toolVersion    = '8.37'
+    toolVersion    = '8.38'
     configFile     = rootProject.file('./checkstyle.xml')
     ignoreFailures = true
     showViolations = true
@@ -68,7 +68,7 @@ tasks.withType(Checkstyle) {
 //region SpotBugs configurations
 
 spotbugs {
-    toolVersion.set('4.1.4')
+    toolVersion.set('4.2.0')
     ignoreFailures.set(true)
     excludeFilter.set(file('./spotbugs-exclude.xml'))
 
@@ -88,7 +88,7 @@ spotbugsMain {
 //region JaCoCo configurations
 
 jacoco {
-    toolVersion = '0.8.5'
+    toolVersion = '0.8.6'
 }
 
 jacocoTestReport {

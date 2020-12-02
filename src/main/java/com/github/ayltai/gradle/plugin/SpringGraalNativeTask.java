@@ -175,8 +175,8 @@ public class SpringGraalNativeTask extends Exec {
 
         if (this.enableUrlProtocols.isPresent() && !this.enableUrlProtocols.get().isEmpty()) args.add("--enable-url-protocols=" + String.join(",", this.enableUrlProtocols.get()));
         if (this.removeYamlSupport.isPresent()) args.add("-Dspring.native.remove-yaml-support=" + this.removeYamlSupport.get());
-        if (this.removeXmlSupport.isPresent()) args.add("-Dspring.native.remove-xml-support=" + this.removeXmlSupport.get());
-        if (this.removeSpelSupport.isPresent()) args.add("-Dspring.native.remove-spel-support=" + this.removeSpelSupport.get());
+        if (this.removeXmlSupport.isPresent()) args.add("-Dspring.xml.ignore=" + this.removeXmlSupport.get());
+        if (this.removeSpelSupport.isPresent()) args.add("-Dspring.spel.ignore=" + this.removeSpelSupport.get());
         if (this.removeJmxSupport.isPresent()) args.add("-Dspring.native.remove-jmx-support=" + this.removeJmxSupport.get());
         if (this.verify.isPresent()) args.add("-Dspring.native.verify=" + this.verify.get());
         if (this.springNativeVerbose.isPresent()) args.add("-Dspring.native.verbose=" + this.springNativeVerbose.get());
