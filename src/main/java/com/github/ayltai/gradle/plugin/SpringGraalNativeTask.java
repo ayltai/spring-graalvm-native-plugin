@@ -142,7 +142,7 @@ public class SpringGraalNativeTask extends Exec {
     }
 
     @Nonnull
-    protected Iterable<String> getCommandLineArgs(@Nonnull final String classPath) {
+    protected List<String> getCommandLineArgs(@Nonnull final String classPath) {
         final List<String> args = new ArrayList<>();
 
         if (Constants.DOWNLOAD_SKIP.equals(this.download.getOrElse(Constants.DOWNLOAD_DEFAULT))) {
@@ -216,8 +216,11 @@ public class SpringGraalNativeTask extends Exec {
             this.deleteOutputDir(outputDir);
             this.copyFiles(classesPath, outputDir);
 
-            this.workingDir(outputDir)
-                .commandLine(this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir)));
+            final List<String> args = this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir));
+
+            this.environment("PATH", System.getenv("PATH") + File.pathSeparator + new File(args.get(0)).getParent())
+                .workingDir(outputDir)
+                .commandLine(args);
 
             super.exec();
         } catch (final IOException e) {
