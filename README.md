@@ -84,6 +84,21 @@ nativeImage {
     removeUnusedAutoConfig          = true
     removeYamlSupport               = true
     maxHeapSize                     = '6G'
+
+    initializeAtBuildTime = [
+        'ch.qos.logback.classic.Level',
+        'org.springframework.boot.logging.java.JavaLoggingSystem$Factory',
+        'org.springframework.boot.logging.logback.LogbackLoggingSystem$Factory',
+        'org.springframework.core.SpringProperties',
+        'org.springframework.util.unit.DataSize',
+    ]
+
+    initializeAtRunTime = [
+        'org.apache.tomcat.jni.OS',
+        'org.apache.tomcat.jni.SSL',
+        'org.apache.tomcat.util.net.openssl.OpenSSLEngine',
+        'org.springframework.core.io.VfsUtils',
+    ]
 }
 ```
 
@@ -128,8 +143,12 @@ More configuration options can be found [here](https://github.com/ayltai/spring-
 | `dumpConfig` | `String` | Dumps the configuration to the specified file. |
 | `maxHeapSize` | `String` | Maximum allowed Java heap size for building GraalVM Native Image. |
 | `initializeAtBuildTime` | `List<String>` | Use it with specific classes or package to initialize classes at build time. |
+| `initializeAtRunTime` | `List<String>` | Use it with specific classes or package to initialize classes at runtime. |
 
 See [Spring GraalVM Native configuration options](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.7.1/spring-graalvm-native-docs-0.7.1.zip!/reference/index.html#options) for more details.
+
+## Limitations
+* [Executable Spring Boot archives](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#packaging-executable-configuring-launch-script) are not supported
 
 ## GitHub action
 [setup-graalvm](https://github.com/marketplace/actions/setup-graalvm-action) is a GitHub action that sets up a GraalVM environment for your [GitHub workflow](https://github.com/features/actions).

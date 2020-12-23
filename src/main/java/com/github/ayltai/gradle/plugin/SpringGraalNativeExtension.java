@@ -43,6 +43,7 @@ public class SpringGraalNativeExtension {
     protected final Property<String>     mainClassName;
     protected final Property<String>     maxHeapSize;
     protected final ListProperty<String> initializeAtBuildTime;
+    protected final ListProperty<String> initializeAtRunTime;
 
     //endregion
 
@@ -77,6 +78,7 @@ public class SpringGraalNativeExtension {
         this.mainClassName                   = factory.property(String.class);
         this.maxHeapSize                     = factory.property(String.class);
         this.initializeAtBuildTime           = factory.listProperty(String.class);
+        this.initializeAtRunTime             = factory.listProperty(String.class);
     }
 
     //region Properties
@@ -564,6 +566,23 @@ public class SpringGraalNativeExtension {
      */
     public void setInitializeAtBuildTime(@Nullable final List<String> initializeAtBuildTime) {
         this.initializeAtBuildTime.set(initializeAtBuildTime);
+    }
+
+    /**
+     * Returns the classes to be initialized by default at runtime.
+     * @return The classes to be initialized by default at runtime.
+     */
+    @Nullable
+    public List<String> getInitializeAtRunTime() {
+        return this.initializeAtRunTime.getOrNull();
+    }
+
+    /**
+     * Sets the classes to be initialized by default at runtime.
+     * @param initializeAtRunTime The classes to be initialized by default at runtime.
+     */
+    public void setInitializeAtRunTime(@Nullable final List<String> initializeAtRunTime) {
+        this.initializeAtRunTime.set(initializeAtRunTime);
     }
 
     //endregion

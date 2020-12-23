@@ -64,6 +64,7 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
                 task.mainClassName.set(extension.getMainClassName());
                 task.maxHeapSize.set(extension.getMaxHeapSize());
                 task.initializeAtBuildTime.set(extension.getInitializeAtBuildTime());
+                task.initializeAtRunTime.set(extension.getInitializeAtRunTime());
             });
     }
 

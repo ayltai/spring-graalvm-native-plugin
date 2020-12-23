@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot'                       version '2.4.1'
     id 'io.spring.dependency-management'                version '1.0.10.RELEASE'
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.2-beta.2'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.2-beta.3'
 }
 
 group   'com.example'
@@ -30,4 +30,19 @@ nativeImage {
     removeSpelSupport               = true
     removeJmxSupport                = true
     maxHeapSize                     = '4G'
+
+    initializeAtBuildTime = [
+        'ch.qos.logback.classic.Level',
+        'org.springframework.boot.logging.java.JavaLoggingSystem$Factory',
+        'org.springframework.boot.logging.logback.LogbackLoggingSystem$Factory',
+        'org.springframework.core.SpringProperties',
+        'org.springframework.util.unit.DataSize',
+    ]
+
+    initializeAtRunTime = [
+        'org.apache.tomcat.jni.OS',
+        'org.apache.tomcat.jni.SSL',
+        'org.apache.tomcat.util.net.openssl.OpenSSLEngine',
+        'org.springframework.core.io.VfsUtils',
+    ]
 }
