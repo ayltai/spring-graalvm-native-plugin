@@ -10,14 +10,13 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.4.2-beta.1'
+version '1.4.2-beta.2'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
-    mavenCentral()
     maven { url 'https://dl.bintray.com/mockito/maven' }
 }
 

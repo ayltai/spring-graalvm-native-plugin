@@ -1,19 +1,18 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot'                       version '2.3.1.RELEASE'
-    id 'io.spring.dependency-management'                version '1.0.9.RELEASE'
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.0.7'
+    id 'org.springframework.boot'                       version '2.4.1'
+    id 'io.spring.dependency-management'                version '1.0.10.RELEASE'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.2-beta.2'
 }
 
 group   'com.example'
 version '0.0.1-SNAPSHOT'
 
-sourceCompatibility = 8
-targetCompatibility = 8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
-    mavenCentral()
 }
 
 dependencies {
@@ -23,12 +22,12 @@ dependencies {
 }
 
 nativeImage {
-    mainClassName              = 'com.example.tomcat.TomcatApplication'
-    traceClassInitialization   = true
-    reportExceptionStackTraces = true
-    removeUnusedAutoConfig     = true
-    removeYamlSupport          = true
-    removeSpelSupport          = true
-    removeJmxSupport           = true
-    maxHeapSize                = '4G'
+    mainClassName                   = 'com.example.tomcat.TomcatApplication'
+    traceClassInitializationEnabled = true
+    reportExceptionStackTraces      = true
+    removeUnusedAutoConfig          = true
+    removeYamlSupport               = true
+    removeSpelSupport               = true
+    removeJmxSupport                = true
+    maxHeapSize                     = '4G'
 }

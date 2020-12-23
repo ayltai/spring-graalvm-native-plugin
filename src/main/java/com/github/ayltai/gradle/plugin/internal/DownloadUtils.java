@@ -37,7 +37,7 @@ public final class DownloadUtils {
 
         final File outputFile = new File(outputDir, downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1));
         if (Constants.DOWNLOAD_DEFAULT.equals(downloadStrategy) && !outputFile.exists() || Constants.DOWNLOAD_ALWAYS.equals(downloadStrategy)) {
-            DownloadUtils.LOGGER.info(String.format("Downloading %s", downloadUrl));
+            DownloadUtils.LOGGER.lifecycle(String.format("Downloading %s", downloadUrl));
 
             try (
                 ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(downloadUrl).openStream());
@@ -52,7 +52,7 @@ public final class DownloadUtils {
                     ArchiveUtils.decompressTarGZip(outputFile, outputDir);
                 }
 
-                DownloadUtils.LOGGER.info("Installing GraalVM Native Image");
+                DownloadUtils.LOGGER.lifecycle("Installing GraalVM Native Image");
 
                 final int result = new ProcessBuilder()
                     .command(Paths.get(outputDir.getAbsolutePath(), DownloadUtils.getOutputPath(StringUtils.substringBetween(downloadUrl, "/vm-", "/"), StringUtils.substringBetween(downloadUrl, "-java", "-")), "bin", isWindows ? "gu.exe" : "gu").toString(), "install", "native-image")

@@ -77,27 +77,17 @@ buildscript {
 This plugin uses the following example Gradle extension for configuration:
 ```groovy
 nativeImage {
-    mainClassName = 'com.example.springboot.Application'
-
-    reportExceptionStackTraces = true
-    removeUnusedAutoConfig     = true
-    removeYamlSupport          = true
-    maxHeapSize                = '6G'
+    mainClassName                   = 'com.example.springboot.Application'
+    traceClassInitializationEnabled = true
+    reportExceptionStackTraces      = true
+    reportExceptionStackTraces      = true
+    removeUnusedAutoConfig          = true
+    removeYamlSupport               = true
+    maxHeapSize                     = '6G'
 }
 ```
 
 More configuration options can be found [here](https://github.com/ayltai/spring-graalvm-native-plugin#configuration).
-
-### Update Spring Boot annotation
-You need to specify `proxyBeanMethods = false` for your `@SpringBootApplication` annotation:
-```java
-@SpringBootApplication(proxyBeanMethods = false)
-public class TomcatApplication {
-    public static void main(final String[] args) {
-        SpringApplication.run(TomcatApplication.class, args);
-    }
-}
-```
 
 ### Build GraalVM Native Image
 1. Run the Gradle task `buildNativeImage`
