@@ -10,13 +10,17 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
 import javax.annotation.Nonnull;
 
+import org.gradle.api.logging.Logger;
 import org.gradle.api.resources.ResourceException;
 
 import com.github.ayltai.gradle.plugin.Constants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 public final class DownloadUtils {
+    private static final Logger LOGGER = (Logger)LoggerFactory.getLogger(DownloadUtils.class);
+
     private static final String OUTPUT_PATH = "graalvm-ce-java%2$s-%1$s";
 
     private DownloadUtils() {
@@ -33,6 +37,8 @@ public final class DownloadUtils {
 
         final File outputFile = new File(outputDir, downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1));
         if (Constants.DOWNLOAD_DEFAULT.equals(downloadStrategy) && !outputFile.exists() || Constants.DOWNLOAD_ALWAYS.equals(downloadStrategy)) {
+            DownloadUtils.LOGGER.info(String.format("Downloading %s", downloadUrl));
+
             try (
                 ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(downloadUrl).openStream());
                 FileOutputStream    outputStream        = new FileOutputStream(outputFile);
@@ -45,6 +51,8 @@ public final class DownloadUtils {
                 } else {
                     ArchiveUtils.decompressTarGZip(outputFile, outputDir);
                 }
+
+                DownloadUtils.LOGGER.info("Installing GraalVM Native Image");
 
                 final int result = new ProcessBuilder()
                     .command(Paths.get(outputDir.getAbsolutePath(), DownloadUtils.getOutputPath(StringUtils.substringBetween(downloadUrl, "/vm-", "/"), StringUtils.substringBetween(downloadUrl, "-java", "-")), "bin", isWindows ? "gu.exe" : "gu").toString(), "install", "native-image")

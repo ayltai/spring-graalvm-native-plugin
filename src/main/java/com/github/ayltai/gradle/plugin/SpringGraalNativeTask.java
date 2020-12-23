@@ -213,8 +213,10 @@ public class SpringGraalNativeTask extends Exec {
             this.deleteOutputDir(outputDir);
             this.copyFiles(classesPath, outputDir);
 
-            this.workingDir(outputDir)
-                .commandLine(this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir)));
+            final List<String> args = (List<String>)this.getCommandLineArgs(this.getClassPath(classesPath.toString(), outputDir));
+            SpringGraalNativeTask.LOGGER.debug(String.format("Executing command: %s", String.join(" ", args)));
+
+            this.workingDir(outputDir).commandLine(args);
 
             super.exec();
         } catch (final IOException e) {
