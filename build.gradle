@@ -10,7 +10,7 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.4.1'
+version '1.4.2'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,7 +43,7 @@ test {
 //region Checkstyle configurations
 
 checkstyle {
-    toolVersion    = '8.38'
+    toolVersion    = '8.39'
     configFile     = rootProject.file('./checkstyle.xml')
     ignoreFailures = true
     showViolations = true
