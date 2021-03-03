@@ -295,7 +295,7 @@ public class SpringGraalNativeExtension {
      * @param enableHttps {@code true} if HTTPS support is enabled.
      */
     public void setEnableHttps(final boolean enableHttps) {
-        this.enableHttps.set(enableHttp);
+        this.enableHttps.set(enableHttps);
     }
 
     /**
