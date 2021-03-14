@@ -11,7 +11,7 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ayltai_spring-graalvm-native-plugin&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=ayltai_spring-graalvm-native-plugin)
 [![Sonar Tech Debt](https://img.shields.io/sonar/tech_debt/ayltai_spring-graalvm-native-plugin?style=flat&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=ayltai_spring-graalvm-native-plugin)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ayltai_spring-graalvm-native-plugin&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=ayltai_spring-graalvm-native-plugin)
-![Maintenance](https://img.shields.io/maintenance/yes/2020?style=flat)
+![Maintenance](https://img.shields.io/maintenance/yes/2021?style=flat)
 [![Release](https://img.shields.io/github/release/ayltai/spring-graalvm-native-plugin.svg?style=flat)](https://github.com/ayltai/spring-graalvm-native-plugin/releases)
 [![License](https://img.shields.io/github/license/ayltai/spring-graalvm-native-plugin.svg?style=flat)](https://github.com/ayltai/spring-graalvm-native-plugin/blob/master/LICENSE)
 
