@@ -12,8 +12,8 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
     static final String TASK_NAME      = "buildNativeImage";
     static final String DEPENDENT_TASK = "bootJar";
 
-    private static final String DEPENDENT_REPO     = "https://repo.spring.io/milestone";
-    private static final String DEPENDENT_ARTIFACT = "org.springframework.experimental:spring-graalvm-native:" + Constants.SPRING_GRAALVM_VERSION;
+    private static final String DEPENDENT_REPO     = "https://repo.spring.io/release";
+    private static final String DEPENDENT_ARTIFACT = "org.springframework.experimental:spring-native:" + Constants.SPRING_GRAALVM_VERSION;
 
     //endregion
 
