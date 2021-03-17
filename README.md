@@ -29,7 +29,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.4'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.5'
 }
 ```
 
@@ -43,7 +43,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.4'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.5'
     }
 }
 
@@ -54,7 +54,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.4.4'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.4.5'
 }
 ```
 
@@ -68,7 +68,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.4')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.5')
     }
 }
 ```
@@ -150,5 +150,5 @@ See [Spring GraalVM Native configuration options](https://repo.spring.io/milesto
 ## References
 * [GraalVM](https://www.graalvm.org)
 * [GraalVM Native Image](https://www.graalvm.org/docs/reference-manual/native-image)
-* [Spring GraalVM Native](https://github.com/spring-projects-experimental/spring-graalvm-native)
-* [Spring GraalVM Native configuration options](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.8.5/spring-graalvm-native-docs-0.8.5.zip!/reference/index.html#options)
+* [Spring Native](https://github.com/spring-projects-experimental/spring-native)
+* [Spring Native configuration options](https://repo.spring.io/release/org/springframework/experimental/spring-native/0.9.0/spring-graalvm-native-docs-0.8.5.zip!/reference/index.html#options)
