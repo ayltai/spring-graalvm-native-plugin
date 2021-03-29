@@ -10,15 +10,13 @@ plugins {
 }
 
 group   'com.github.ayltai'
-version '1.4.5'
+version '1.4.6'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
-    mavenCentral()
-    maven { url 'https://dl.bintray.com/mockito/maven' }
 }
 
 ext {
@@ -31,7 +29,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     // Testing
-    testImplementation 'org.mockito:mockito-core:3.8.14'
+    testImplementation 'org.mockito:mockito-core:3.8.0'
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testRuntimeOnly    "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 }
@@ -43,7 +41,7 @@ test {
 //region Checkstyle configurations
 
 checkstyle {
-    toolVersion    = '8.41'
+    toolVersion    = '8.41.1'
     configFile     = rootProject.file('./checkstyle.xml')
     ignoreFailures = true
     showViolations = true
@@ -68,7 +66,7 @@ tasks.withType(Checkstyle) {
 //region SpotBugs configurations
 
 spotbugs {
-    toolVersion.set('4.2.0')
+    toolVersion.set('4.2.2')
     ignoreFailures.set(true)
     excludeFilter.set(file('./spotbugs-exclude.xml'))
 

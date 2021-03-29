@@ -13,7 +13,7 @@ public class SpringGraalNativePlugin implements Plugin<Project> {
     static final String DEPENDENT_TASK = "bootJar";
 
     private static final String DEPENDENT_REPO     = "https://repo.spring.io/release";
-    private static final String DEPENDENT_ARTIFACT = "org.springframework.experimental:spring-native:" + Constants.SPRING_GRAALVM_VERSION;
+    private static final String DEPENDENT_ARTIFACT = "org.springframework.experimental:spring-native:" + Constants.SPRING_NATIVE_VERSION;
 
     //endregion
 
