@@ -47,7 +47,7 @@ public final class DownloadUtils {
                 }
 
                 final int result = new ProcessBuilder()
-                    .command(Paths.get(outputDir.getAbsolutePath(), DownloadUtils.getOutputPath(StringUtils.substringBetween(downloadUrl, "/vm-", "/"), StringUtils.substringBetween(downloadUrl, "-java", "-")), "bin", isWindows ? "gu.exe" : "gu").toString(), "install", "native-image")
+                    .command(Paths.get(outputDir.getAbsolutePath(), DownloadUtils.getOutputPath(StringUtils.substringBetween(downloadUrl, "/vm-", "/"), StringUtils.substringBetween(downloadUrl, "-java", "-")), "bin", "gu").toString(), "install", "native-image")
                     .start()
                     .waitFor();
 
