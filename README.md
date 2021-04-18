@@ -29,7 +29,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.5'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.7'
 }
 ```
 
@@ -43,7 +43,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.5'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.7'
     }
 }
 
@@ -54,7 +54,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.4.5'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.4.7'
 }
 ```
 
@@ -68,7 +68,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.5')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.7')
     }
 }
 ```
@@ -125,21 +125,21 @@ public class TomcatApplication {
 | `enableHttps` | `boolean` | Enables HTTPS support in the generated image. |
 | `enableUrlProtocols` | `List<String>` | Specifies a list of URL protocols to be enabled in the generated image. |
 | `staticallyLinked` | `boolean` | Builds a statically linked executable, useful to deploy on a `FROM scratch` Docker image. |
-| `warnMissingSelectorHints` | `boolean` | Switches the feature from a hard error for missing hints to a warning. See the [Troubleshooting](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.7.1/spring-graalvm-native-docs-0.7.1.zip!/reference/index.html#troubleshooting) section for more details on this. |
+| `warnMissingSelectorHints` | `boolean` | Switches the feature from a hard error for missing hints to a warning. |
 | `removeUnusedAutoConfig` | `boolean` | Disables removal of unused configurations. |
 | `verbose` | `boolean` | Makes image building output more verbose. |
 | `removeYamlSupport` | `boolean` | Removes Yaml support from Spring Boot, enabling faster compilation and smaller executables. |
 | `removeXmlSupport` | `boolean` | Removes XML support from Spring Boot, enabling faster compilation and smaller executables. |
 | `removeSpelSupport` | `boolean` | Removes SpEL support from Spring Boot, enabling faster compilation and smaller executables. |
 | `removeJmxSupport` | `boolean` | Removes JMX support from Spring Boot, enabling faster compilation and smaller executables. |
-| `verify` | `boolean` | Switches on the verifier mode. See the [Troubleshooting](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.8.5/spring-graalvm-native-docs-0.8.5.zip!/reference/index.html#troubleshooting) section for more details on this experimental option. |
+| `verify` | `boolean` | Switches on the verifier mode. |
 | `springNativeVerbose` | `boolean` | Outputs lots of information about the feature behavior as it processes auto-configuration and chooses which to include. |
 | `springNativeMode` | `String` | Switches how much configuration the feature actually provides to native-image. The default is `reflection` which provides resource, initialization, proxy, and reflection (using auto-configuration hints) configuration for native images as well as substitutions. `agent` should be used if only wishing the feature to provide substitutions and initialization configuration - in this mode you should have used the agent to collect the rest of the configuration. `functional` is when working with functional bean registration (Spring Fu style). In this mode the feature will provide initialization and resource configuration but nothing more. `init` should be used if only wishing to provide initialization configuration and substitutions. |
 | `dumpConfig` | `String` | Dumps the configuration to the specified file. |
 | `maxHeapSize` | `String` | Maximum allowed Java heap size for building GraalVM Native Image. |
 | `initializeAtBuildTime` | `List<String>` | Use it with specific classes or package to initialize classes at build time. |
 
-See [Spring GraalVM Native configuration options](https://repo.spring.io/milestone/org/springframework/experimental/spring-graalvm-native-docs/0.8.5/spring-graalvm-native-docs-0.8.5.zip!/reference/index.html#options) for more details.
+See [Spring GraalVM Native configuration options](https://docs.spring.io/spring-native/docs/current/reference/htmlsingle/#native-image-options) for more details.
 
 ## GitHub action
 [setup-graalvm](https://github.com/marketplace/actions/setup-graalvm-action) is a GitHub action that sets up a GraalVM environment for your [GitHub workflow](https://github.com/features/actions).
@@ -151,4 +151,4 @@ See [Spring GraalVM Native configuration options](https://repo.spring.io/milesto
 * [GraalVM](https://www.graalvm.org)
 * [GraalVM Native Image](https://www.graalvm.org/docs/reference-manual/native-image)
 * [Spring Native](https://github.com/spring-projects-experimental/spring-native)
-* [Spring Native configuration options](https://repo.spring.io/release/org/springframework/experimental/spring-native/0.9.0/spring-graalvm-native-docs-0.8.5.zip!/reference/index.html#options)
+* [Spring Native configuration options](https://docs.spring.io/spring-native/docs/current/reference/htmlsingle/#native-image-options)
