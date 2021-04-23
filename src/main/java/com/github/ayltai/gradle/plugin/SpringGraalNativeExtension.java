@@ -43,6 +43,7 @@ public class SpringGraalNativeExtension {
     protected final Property<String>     mainClassName;
     protected final Property<String>     maxHeapSize;
     protected final ListProperty<String> initializeAtBuildTime;
+    protected final ListProperty<String> extraArgs;
 
     //endregion
 
@@ -77,6 +78,7 @@ public class SpringGraalNativeExtension {
         this.mainClassName                   = factory.property(String.class);
         this.maxHeapSize                     = factory.property(String.class);
         this.initializeAtBuildTime           = factory.listProperty(String.class);
+        this.extraArgs                       = factory.listProperty(String.class);
     }
 
     //region Properties
@@ -564,6 +566,23 @@ public class SpringGraalNativeExtension {
      */
     public void setInitializeAtBuildTime(@Nullable final List<String> initializeAtBuildTime) {
         this.initializeAtBuildTime.set(initializeAtBuildTime);
+    }
+
+    /**
+     * Returns additional arguments for native-image
+     * @return additional arguments for native-image
+     */
+    @Nullable
+    public List<String> getExtraArgs() {
+        return this.extraArgs.getOrNull();
+    }
+
+    /**
+     * Sets additional arguments for native-image
+     * @param extraArgs additional arguments for native-image
+     */
+    public void setExtraArgs(@Nullable final List<String> extraArgs) {
+        this.extraArgs.set(extraArgs);
     }
 
     //endregion

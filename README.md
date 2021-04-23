@@ -138,6 +138,7 @@ public class TomcatApplication {
 | `dumpConfig` | `String` | Dumps the configuration to the specified file. |
 | `maxHeapSize` | `String` | Maximum allowed Java heap size for building GraalVM Native Image. |
 | `initializeAtBuildTime` | `List<String>` | Use it with specific classes or package to initialize classes at build time. |
+| `extraArgs` | `List<String>` | Add any `native-image` compiler arguments not covered by `spring-graalvm-native-plugin`. |
 
 See [Spring GraalVM Native configuration options](https://docs.spring.io/spring-native/docs/current/reference/htmlsingle/#native-image-options) for more details.
 

@@ -9,8 +9,10 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.38.0'
 }
 
+apply plugin: 'maven-publish'
+
 group   'com.github.ayltai'
-version '1.4.7'
+version '1.4.8'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
