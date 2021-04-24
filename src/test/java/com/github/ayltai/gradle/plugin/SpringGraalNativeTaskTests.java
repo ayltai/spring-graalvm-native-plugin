@@ -59,6 +59,8 @@ public final class SpringGraalNativeTaskTests extends UnitTests {
     @Test
     public void testGetCommandLineArgs() {
         final SpringGraalNativeTask task = this.getTask();
+        task.extraArgs.add("-H:Xyz=uvw");
+        task.extraArgs.add("-H:Def=abc");
         task.download.set(Constants.DOWNLOAD_SKIP);
         task.mainClassName.set(SpringGraalNativeTaskTests.MAIN_CLASS_NAME);
 
@@ -77,10 +79,12 @@ public final class SpringGraalNativeTaskTests extends UnitTests {
         task.removeJmxSupport.set(true);
 
         args = StreamSupport.stream(task.getCommandLineArgs(SpringGraalNativeTaskTests.CLASS_PATH).spliterator(), false).collect(Collectors.toList());
-        Assertions.assertTrue(args.contains("-Dspring.native.remove-yaml-support=true"));
-        Assertions.assertTrue(args.contains("-Dspring.xml.ignore=true"));
-        Assertions.assertTrue(args.contains("-Dspring.spel.ignore=true"));
-        Assertions.assertTrue(args.contains("-Dspring.native.remove-jmx-support=true"));
+        Assertions.assertTrue(args.contains("-H:Xyz=uvw"),args + " should contain '-H:Xyz=uvw'");
+        Assertions.assertTrue(args.contains("-H:Def=abc"), args + " should contain '-H:Def=abc'");
+        Assertions.assertTrue(args.contains("-Dspring.native.remove-yaml-support=true"), args + " should contain '-Dspring.native.remove-yaml-support=true'");
+        Assertions.assertTrue(args.contains("-Dspring.xml.ignore=true"), args + " should contain '-Dspring.xml.ignore=true'");
+        Assertions.assertTrue(args.contains("-Dspring.spel.ignore=true"), args + " should contain '-Dspring.spel.ignore=true'");
+        Assertions.assertTrue(args.contains("-Dspring.native.remove-jmx-support=true"), args + " should contain '-Dspring.native.remove-jmx-support=true'");
     }
 
     @Nonnull
