@@ -79,6 +79,7 @@ public class SpringGraalNativeTask extends Exec {
     protected final Property<String>     mainClassName;
     protected final Property<String>     maxHeapSize;
     protected final ListProperty<String> initializeAtBuildTime;
+    protected final ListProperty<String> extraArgs;
 
     //endregion
 
@@ -113,6 +114,7 @@ public class SpringGraalNativeTask extends Exec {
         this.mainClassName                   = factory.property(String.class);
         this.maxHeapSize                     = factory.property(String.class);
         this.initializeAtBuildTime           = factory.listProperty(String.class);
+        this.extraArgs                       = factory.listProperty(String.class);
 
         this.setGroup("build");
         this.setDescription("Builds a native image for Spring Boot applications using GraalVM tools");
@@ -183,6 +185,7 @@ public class SpringGraalNativeTask extends Exec {
         if (this.springNativeMode.isPresent()) args.add("-Dspring.native.mode=" + this.springNativeMode.get());
         if (this.maxHeapSize.isPresent() && !this.maxHeapSize.get().isEmpty()) args.add("-J-Xmx" + this.maxHeapSize.get());
         if (this.initializeAtBuildTime.isPresent() && !this.initializeAtBuildTime.get().isEmpty()) args.add("--initialize-at-build-time=" + String.join(",", this.initializeAtBuildTime.get()));
+        if (this.extraArgs.isPresent() && !this.extraArgs.get().isEmpty()) args.add(String.join(",", this.extraArgs.get()));
 
         args.add("-H:Name=" + this.getProject().getName());
         args.add("-cp");
