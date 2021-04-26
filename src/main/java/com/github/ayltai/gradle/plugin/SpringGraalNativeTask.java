@@ -1,18 +1,9 @@
 package com.github.ayltai.gradle.plugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
+import com.github.ayltai.gradle.plugin.internal.ArchiveUtils;
+import com.github.ayltai.gradle.plugin.internal.DownloadUtils;
+import com.github.ayltai.gradle.plugin.internal.PlatformUtils;
+import com.github.ayltai.gradle.plugin.internal.VersionNumberComparator;
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.logging.Logger;
@@ -25,13 +16,20 @@ import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.internal.os.OperatingSystem;
-
-import com.github.ayltai.gradle.plugin.internal.ArchiveUtils;
-import com.github.ayltai.gradle.plugin.internal.DownloadUtils;
-import com.github.ayltai.gradle.plugin.internal.PlatformUtils;
-import com.github.ayltai.gradle.plugin.internal.VersionNumberComparator;
-
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpringGraalNativeTask extends Exec {
     private static final Logger LOGGER = (Logger)LoggerFactory.getLogger(SpringGraalNativeTask.class);
@@ -185,7 +183,7 @@ public class SpringGraalNativeTask extends Exec {
         if (this.springNativeMode.isPresent()) args.add("-Dspring.native.mode=" + this.springNativeMode.get());
         if (this.maxHeapSize.isPresent() && !this.maxHeapSize.get().isEmpty()) args.add("-J-Xmx" + this.maxHeapSize.get());
         if (this.initializeAtBuildTime.isPresent() && !this.initializeAtBuildTime.get().isEmpty()) args.add("--initialize-at-build-time=" + String.join(",", this.initializeAtBuildTime.get()));
-        if (this.extraArgs.isPresent() && !this.extraArgs.get().isEmpty()) args.add(String.join(",", this.extraArgs.get()));
+        if (this.extraArgs.isPresent() && !this.extraArgs.get().isEmpty()) args.addAll(this.extraArgs.get());
 
         args.add("-H:Name=" + this.getProject().getName());
         args.add("-cp");
