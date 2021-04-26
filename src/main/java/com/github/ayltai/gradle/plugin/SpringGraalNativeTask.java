@@ -1,9 +1,23 @@
 package com.github.ayltai.gradle.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
 import com.github.ayltai.gradle.plugin.internal.ArchiveUtils;
 import com.github.ayltai.gradle.plugin.internal.DownloadUtils;
 import com.github.ayltai.gradle.plugin.internal.PlatformUtils;
 import com.github.ayltai.gradle.plugin.internal.VersionNumberComparator;
+
 import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.logging.Logger;
@@ -16,20 +30,8 @@ import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.internal.os.OperatingSystem;
-import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.slf4j.LoggerFactory;
 
 public class SpringGraalNativeTask extends Exec {
     private static final Logger LOGGER = (Logger)LoggerFactory.getLogger(SpringGraalNativeTask.class);
