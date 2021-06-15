@@ -12,13 +12,13 @@ plugins {
 apply plugin: 'maven-publish'
 
 group   'com.github.ayltai'
-version '1.4.9'
+version '1.4.10'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 ext {

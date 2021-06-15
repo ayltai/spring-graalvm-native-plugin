@@ -29,7 +29,7 @@ Supports for building Spring Boot applications as GraalVM native images.
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.9'
+    id 'com.github.ayltai.spring-graalvm-native-plugin' version '1.4.10'
 }
 ```
 
@@ -43,7 +43,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.9'
+        classpath 'gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.10'
     }
 }
 
@@ -54,7 +54,7 @@ apply plugin: 'com.github.ayltai.spring-graalvm-native-plugin'
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.4.9'
+    id('com.github.ayltai.spring-graalvm-native-plugin') version '1.4.10'
 }
 ```
 
@@ -68,7 +68,7 @@ buildscript {
     }
 
     dependencies {
-        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.9')
+        classpath('gradle.plugin.com.github.ayltai:spring-graalvm-native-plugin:1.4.10')
     }
 }
 ```
@@ -109,7 +109,7 @@ public class TomcatApplication {
 ## Configuration
 | Property | Type | Description |
 |----------|------|-------------|
-| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `21.0.0`. |
+| `toolVersion` | `String` | The GraalVM Community Edition version to download. Default to `21.1.0`. |
 | `javaVersion` | `String` | The JDK version to be downloaded with GraalVM Community Edition. Default to `8`. |
 | `download` | `String` | Specify when to download GraalVM Community Edition. Supports `default` which downloads GraalVM tools only if they are not already downloaded, `always` which always (re-)download GraalVM tools, and `skip` which skips downloading GraalVM tools and assumes they are already installed. |
 | `mainClassName` (Required) | `String` | The fully qualified name of the Java class that contains a `main` method for the entry point of the Native Image executable. |
